@@ -1,6 +1,6 @@
 # _PDSB project, Instituto Superior Técnico_ 
 
-[![](https://www.ejp-eurad.eu/sites/default/files/2019-11/ist_logo.png)](https://fenix.tecnico.ulisboa.pt/cursos/mebiom/disciplina-curricular/1529008500343) 
+[![](https://www.ejp-eurad.eu/sites/default/files/2019-11/ist_logo.png)](https://tecnico.ulisboa.pt/en/) 
 
 This is a project for the classification of sleep stages from EEG recordings. This project was part of the [PDSB](https://fenix.tecnico.ulisboa.pt/cursos/mebiom/disciplina-curricular/1529008500343) course of the 1st year/2nd semester of the [Master in Biomedical Engineering](https://fenix.tecnico.ulisboa.pt/cursos/mebiom) at [Instituto Superior Técnico, Universidade de Lisboa](https://tecnico.ulisboa.pt/en/).
 
