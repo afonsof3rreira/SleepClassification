@@ -6,7 +6,7 @@ function [sleepstages] = txt_to_stages(name)
 % S2=3
 % S3=2
 % S4=1
-% R=0
+% REM=0
 T = readtable(name);
 if width(T)==8
     eventcolumn=6;

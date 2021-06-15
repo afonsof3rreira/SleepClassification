@@ -1,4 +1,5 @@
 warning('off','all')
+% save edf files and txt files in separate directories as below
 Files_edf=dir('./edf');
 Files_txt=dir('./txt');
 
@@ -8,6 +9,7 @@ for k=1:length(Files_edf)
         FileNames_edf{i}=(Files_edf(k).name);i=i+1;
     end
 end
+
 i=1;
 for k=1:length(Files_txt)
     if Files_txt(k).bytes>0
