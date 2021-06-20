@@ -31,14 +31,26 @@ end
 
 %% 
 n1 = signal_header{1};
-save('n1.mat','n1')
+save('n1_head.mat','n1')
 n2 = signal_header{2};
-save('n2.mat','n2')
+save('n2_head.mat','n2')
 n3 = signal_header{3};
-save('n3.mat','n3')
+save('n3_head.mat','n3')
 n5 = signal_header{4};
-save('n5.mat','n5')
+save('n5_head.mat','n5')
 n11 = signal_header{5};
+save('n11_head.mat','n11')
+
+%%
+n1 = signal{1};
+save('n1.mat','n1')
+n2 = signal{2};
+save('n2.mat','n2')
+n3 = signal{3};
+save('n3.mat','n3')
+n5 = signal{4};
+save('n5.mat','n5')
+n11 = signal{5};
 save('n11.mat','n11')
 
 %% Read txt
