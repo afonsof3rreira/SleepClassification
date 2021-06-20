@@ -28,6 +28,19 @@ for i=1:length(FileNames_edf)
     signal{i}=channels;
     signal_header{i}=header;
 end
+
+%% 
+n1 = signal_header{1};
+save('n1.mat','n1')
+n2 = signal_header{2};
+save('n2.mat','n2')
+n3 = signal_header{3};
+save('n3.mat','n3')
+n5 = signal_header{4};
+save('n5.mat','n5')
+n11 = signal_header{5};
+save('n11.mat','n11')
+
 %% Read txt
 % turn txts into column vector
 sleepstages=[];
