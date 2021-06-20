@@ -1,7 +1,7 @@
 warning('off','all')
 % save edf files and txt files in separate directories as below
-Files_edf=dir('./edf');
-Files_txt=dir('./txt');
+Files_edf=dir('./Files_edf');
+Files_txt=dir('./Files_txt');
 
 i=1;
 for k=1:length(Files_edf)
@@ -20,12 +20,11 @@ end
 %% DO NOT RUN IF YOU DONT HAVE MEMORY 
 % MAYBE JUST RUN 1 AT A TIME
 
-signal=cell(28,1);
-signal_header=cell(28,1);
-
+signal=cell(5,1);
+signal_header=cell(5,1);
 for i=1:length(FileNames_edf)
     [header,channels]=edfread(FileNames_edf{i});
-    disp("file "+i+" of 28 done")
+    disp("file "+i+" of 5 done")
     signal{i}=channels;
     signal_header{i}=header;
 end
