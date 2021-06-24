@@ -1,7 +1,11 @@
+%% PDSB Project
+
+clear
+close all
 warning('off','all')
 % save edf files and txt files in separate directories as below
-Files_edf=dir('./Files_edf');
-Files_txt=dir('./Files_txt');
+Files_edf = dir('./Files_edf');
+Files_txt = dir('./Files_txt');
 
 i=1;
 for k=1:length(Files_edf)
@@ -30,28 +34,12 @@ for i=1:length(FileNames_edf)
 end
 
 %% 
-n1 = signal_header{1};
-save('n1_head.mat','n1')
-n2 = signal_header{2};
-save('n2_head.mat','n2')
-n3 = signal_header{3};
-save('n3_head.mat','n3')
-n5 = signal_header{4};
-save('n5_head.mat','n5')
-n11 = signal_header{5};
-save('n11_head.mat','n11')
+save('signal_header')
+save('signal')
 
-%%
-n1 = signal{1};
-save('n1.mat','n1')
-n2 = signal{2};
-save('n2.mat','n2')
-n3 = signal{3};
-save('n3.mat','n3')
-n5 = signal{4};
-save('n5.mat','n5')
-n11 = signal{5};
-save('n11.mat','n11')
+%% 
+load('signal_header.mat')
+load('signal.mat')
 
 %% Read txt
 % turn txts into column vector
