@@ -46,7 +46,7 @@ load('signal.mat')
 sleepstages=[];
 for i=1:length(FileNames_txt)
     ss = txt_to_stages(FileNames_txt{i});
-    sleepstages=[sleepstages;ss];
+    sleepstages = [sleepstages;ss];
     disp(i+"/"+length(FileNames_txt)+" done")
 end
 
