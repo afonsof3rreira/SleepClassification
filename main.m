@@ -9,14 +9,14 @@ Files_txt = dir('./Files_txt');
 
 i=1;
 for k=1:length(Files_edf)
-    if Files_edf(k).bytes>0
+    if Files_edf(k).bytes>10000
         FileNames_edf{i}=(Files_edf(k).name);i=i+1;
     end
 end
 
 i=1;
 for k=1:length(Files_txt)
-    if Files_txt(k).bytes>0
+    if Files_txt(k).bytes>10000
         FileNames_txt{i}=(Files_txt(k).name);i=i+1;
     end
 end
@@ -33,9 +33,9 @@ for i=1:length(FileNames_edf)
     signal_header{i}=header;
 end
 
-%% 
-save('signal_header')
-save('signal')
+%% nao pode ser assi
+save('signal_header.mat','signal_header')
+save('signal.mat','signal')
 
 %% 
 load('signal_header.mat')
