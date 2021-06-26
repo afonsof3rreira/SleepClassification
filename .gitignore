@@ -1,0 +1,11 @@
+
+.DS_Store
+Files_edf/n2.edf
+*.edf
+*.txt
+Normal_dataset/n1.mat
+Normal_dataset/n11.mat
+Normal_dataset/n2.mat
+Normal_dataset/n3.mat
+Normal_dataset/n5.mat
+Normal_dataset/signal_header.mat
