@@ -1,6 +1,5 @@
 
 .DS_Store
-Files_edf/n2.edf
 *.edf
 *.txt
 Normal_dataset/n1.mat
