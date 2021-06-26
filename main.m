@@ -21,8 +21,7 @@ for k=1:length(Files_txt)
     end
 end
 
-%% DO NOT RUN IF YOU DONT HAVE MEMORY 
-
+%% Get channels and header
 signal=cell(5,1);
 signal_header=cell(5,1);
 for i=1:length(FileNames_edf)
