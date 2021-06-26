@@ -22,7 +22,6 @@ for k=1:length(Files_txt)
 end
 
 %% DO NOT RUN IF YOU DONT HAVE MEMORY 
-% MAYBE JUST RUN 1 AT A TIME
 
 signal=cell(5,1);
 signal_header=cell(5,1);
@@ -33,13 +32,27 @@ for i=1:length(FileNames_edf)
     signal_header{i}=header;
 end
 
-%% nao pode ser assi
+%% Save header and signals
 save('signal_header.mat','signal_header')
-save('signal.mat','signal')
 
-%% 
+n1 = signal{1};
+save('n1.mat', 'n1', '-v7.3')
+n2 = signal{2};
+save('n2.mat', 'n2', '-v7.3')
+n3 = signal{3};
+save('n3.mat', 'n3', '-v7.3')
+n5 = signal{4};
+save('n5.mat', 'n5', '-v7.3')
+n11 = signal{5};
+save('n11.mat', 'n11', '-v7.3')
+
+%% Load signals
 load('signal_header.mat')
-load('signal.mat')
+load('n1.mat')
+load('n2.mat')
+load('n3.mat')
+load('n5.mat')
+load('n11.mat')
 
 %% Read txt
 % turn txts into column vector
