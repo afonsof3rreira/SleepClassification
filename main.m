@@ -64,12 +64,30 @@ for i=1:length(FileNames_txt)
     disp(i+"/"+length(FileNames_txt)+" done")
 end
 
+%% checking all available different signals for a given signal header
 
+[labels, transducers] = check_all_avail_signals(signal_header);
 
+%% Selecting subsignals common in all signals (n1 to n11)
 
+j = 1;
+common_labels = convertCharsToStrings(signal_header{j,1}.label);
+% disp("i = " + num2str(1));
+% disp(common_labels);
+    
+for i = j + 1: size(signal_header, 1)
+    temp_labels = convertCharsToStrings(signal_header{i,1}.label);
+%     disp("i = " + num2str(i));
+%     disp(temp_labels);
+    common_labels = intersect(common_labels, temp_labels);
+end
 
+labels_example = convertCharsToStrings(signal_header{2,1}.label);
+[C,~,ib] = intersect(common_labels, labels_example);
 
+common_transducers = convertCharsToStrings(signal_header{2,1}.transducer);
 
+common_transducers = common_transducers(1, ib(:, 1));
 
-
+disp(sum(count(common_transducers, "EEG")));
 
