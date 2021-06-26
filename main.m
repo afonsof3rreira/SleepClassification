@@ -72,6 +72,8 @@ end
 %% checking all available different signals for a given signal header
 
 [labels, transducers] = check_all_avail_signals(signal_header);
+labels = deblank(labels);
+transducers = deblank(transducers);
 
 %% Selecting subsignals common in all signals (n1 to n11)
 
