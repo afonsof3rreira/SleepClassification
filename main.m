@@ -33,26 +33,27 @@ for i=1:length(FileNames_edf)
 end
 
 %% Save header and signals
-save('signal_header.mat','signal_header')
+save('.\Normal_dataset\signal_header.mat','signal_header')
 
 n1 = signal{1};
-save('n1.mat', 'n1', '-v7.3')
+save('.\Normal_dataset\n1.mat', 'n1', '-v7.3')
 n2 = signal{2};
-save('n2.mat', 'n2', '-v7.3')
+save('.\Normal_dataset\n2.mat', 'n2', '-v7.3')
 n3 = signal{3};
-save('n3.mat', 'n3', '-v7.3')
+save('.\Normal_dataset\n3.mat', 'n3', '-v7.3')
 n5 = signal{4};
-save('n5.mat', 'n5', '-v7.3')
+save('.\Normal_dataset\n5.mat', 'n5', '-v7.3')
 n11 = signal{5};
-save('n11.mat', 'n11', '-v7.3')
+save('.\Normal_dataset\n11.mat', 'n11', '-v7.3')
 
 %% Load signals
-load('signal_header.mat')
-load('n1.mat')
-load('n2.mat')
-load('n3.mat')
-load('n5.mat')
-load('n11.mat')
+clear all
+load('.\Normal_dataset\signal_header.mat')
+load('.\Normal_dataset\n1.mat')
+load('.\Normal_dataset\n2.mat')
+load('.\Normal_dataset\n3.mat')
+load('.\Normal_dataset\n5.mat')
+load('.\Normal_dataset\n11.mat')
 
 %% Read txt
 % turn txts into column vector
