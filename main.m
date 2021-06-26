@@ -33,17 +33,22 @@ end
 
 %% Save header and signals
 save('.\Normal_dataset\signal_header.mat','signal_header')
-
+disp("header saved")
 n1 = signal{1};
 save('.\Normal_dataset\n1.mat', 'n1', '-v7.3')
+disp("n1 saved")
 n2 = signal{2};
 save('.\Normal_dataset\n2.mat', 'n2', '-v7.3')
+disp("n2 saved")
 n3 = signal{3};
 save('.\Normal_dataset\n3.mat', 'n3', '-v7.3')
+disp("n3 saved")
 n5 = signal{4};
 save('.\Normal_dataset\n5.mat', 'n5', '-v7.3')
+disp("n5 saved")
 n11 = signal{5};
 save('.\Normal_dataset\n11.mat', 'n11', '-v7.3')
+disp("n11 saved")
 
 %% Load signals
 clear all
