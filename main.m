@@ -33,9 +33,9 @@ for i=1:length(FileNames_edf)
     signal_header{i}=header;
 end
 
-%% nao pode ser assim pq guarda as variaveis todas do workspace
-save('signal_header')
-save('signal')
+%% nao pode ser assi
+save('signal_header.mat','signal_header')
+save('signal.mat','signal')
 
 %% 
 load('signal_header.mat')
