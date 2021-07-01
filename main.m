@@ -53,12 +53,12 @@ disp("n11 saved")
 
 %% Load signals
 clear all
-load('./Normal_dataset/signal_header.mat')
-load('./Normal_dataset/n1.mat')
-load('./Normal_dataset/n2.mat')
-load('./Normal_dataset/n3.mat')
-load('./Normal_dataset/n5.mat')
-load('./Normal_dataset/n11.mat')
+load('./Normal_dataset/signal_header.mat');disp("header loaded")
+load('./Normal_dataset/n1.mat');disp("n1 loaded")
+load('./Normal_dataset/n2.mat');disp("n2 loaded")
+load('./Normal_dataset/n3.mat');disp("n3 loaded")
+load('./Normal_dataset/n5.mat');disp("n5 loaded")
+load('./Normal_dataset/n11.mat');disp("n11 loaded")
 
 %% checking all available different signals for a given signal header
 
