@@ -87,7 +87,18 @@ n11 = n11(ib(:), :);
 
 clear ib;
 
-selection_info = [common_labs; common_transds];
+samplingfrequencies=zeros(1,length(common_labs));
+for i=1:length(common_labs)
+    j=1;
+    while j<length(signal_header{1}.label)
+        if signal_header{1}.label(j)==common_labs(i)
+            samplingfrequencies(i)=signal_header{1}.samples(j);
+        end
+        j=j+1;
+    end
+end
+selection_info = [common_labs; common_transds;samplingfrequencies];
+
 save('./Selected_dataset/selection_info.mat','selection_info')
 disp("selected info saved")
 
@@ -111,13 +122,13 @@ disp("n11 saved")
 
 %% Load selected signals
 
-load('./Selected_dataset/selection_info.mat')
-load('./Selected_dataset/signal_header.mat')
-load('./Selected_dataset/n1.mat')
-load('./Selected_dataset/n2.mat')
-load('./Selected_dataset/n3.mat')
-load('./Selected_dataset/n5.mat')
-load('./Selected_dataset/n11.mat')
+load('./Selected_dataset/selection_info.mat');disp("selected info loaded")
+load('./Selected_dataset/signal_header.mat');disp("header loaded")
+load('./Selected_dataset/n1.mat');disp("n1 loaded")
+load('./Selected_dataset/n2.mat');disp("n2 loaded")
+load('./Selected_dataset/n3.mat');disp("n3 loaded")
+load('./Selected_dataset/n5.mat');disp("n5 loaded")
+load('./Selected_dataset/n11.mat');disp("n11 loaded")
 
 %% plotting signals
 
