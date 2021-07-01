@@ -86,20 +86,29 @@ n5 = n5(ib(4, :), :);
 [~, ~, ib(5, :)] = intersect(common_labs, signal_header{5, 1}.label);
 n11 = n11(ib(5, :), :);
 
-samplingfrequencies=zeros(1,length(common_labs));
-for i=1:length(common_labs)
-    j=1;
-    while j<length(signal_header{1}.label)
-        if signal_header{1}.label(j)==common_labs(i)
-            samplingfrequencies(i)=signal_header{1}.samples(j);
+samplingfrequencies=zeros(5,length(common_labs));
+for p=1:5
+    for i=1:length(common_labs)
+        j=1;
+        while j<length(signal_header{p}.label)
+            if signal_header{p}.label(j)==common_labs(i)
+                samplingfrequencies(p,i)=signal_header{p}.samples(j);
+            end
+            j=j+1;
         end
-        j=j+1;
     end
 end
+<<<<<<< Updated upstream
 selection_info = [common_labs; common_transds; samplingfrequencies];
 
 %%
+=======
+>>>>>>> Stashed changes
 
+save('./Selected_dataset/samplingfrequencies.mat','samplingfrequencies')
+disp("sampling frequencies saved")
+
+selection_info = [common_labs; common_transds];
 save('./Selected_dataset/selection_info.mat','selection_info')
 disp("selected info saved")
 
@@ -217,7 +226,7 @@ names={'n1','n2','n3','n5','n11'};
 for i=1:length(names)
     patient=eval(names{i});
     for j=1:9
-    segmentedsignals{i,j}=segmentsignal(patient(j,:),str2num(selection_info(3,j)));
+    segmentedsignals{i,j}=segmentsignal(patient(j,:),samplingfrequencies(i,j));
     end
 end
 
