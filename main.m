@@ -192,6 +192,15 @@ for i = 1 : size(X, 1)
     c2 = c2 + 2;
 end
 
+%% Segment signals
+segmentedsignals=cell(5,9);
+names={'n1','n2','n3','n5','n11'};
+for i=1:length(names)
+    patient=eval(names{i});
+    for j=1:9
+    segmentedsignals{i,j}=segmentsignal(patient(j,:),str2num(selection_info(3,j)));
+    end
+end
 
 %% Read txt
 % turn txts into column vector
