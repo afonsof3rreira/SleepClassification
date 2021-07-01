@@ -110,14 +110,78 @@ save('./Selected_dataset/n11.mat', 'n11', '-v7.3')
 disp("n11 saved")
 
 %% Load selected signals
-clear all
-load('./Selected_dataset/common_labels.mat')
+
+load('./Selected_dataset/selection_info.mat')
 load('./Selected_dataset/signal_header.mat')
 load('./Selected_dataset/n1.mat')
 load('./Selected_dataset/n2.mat')
 load('./Selected_dataset/n3.mat')
 load('./Selected_dataset/n5.mat')
 load('./Selected_dataset/n11.mat')
+
+%% plotting signals
+
+X = n1;
+X = zscore(X');X=X'; % mean => 0, St.D. => 1
+
+% figure()
+% plot(n1(1, :));
+% hold on;
+% plot(X(1, :));
+% hold off;
+
+% --- comment / uncomment
+[Xe, A, W] = fastica (X);
+fastica_result = struct;
+fastica_result.Xe_n1 = Xe;
+fastica_result.A_n1 = A;
+fastica_result.W_n1 = W;
+save('fastica_result_n1.mat','-struct','fastica_result');
+% clear fastica_result Xe A W;
+% --- comment / uncomment
+% load('fastica_result.mat');
+% --- comment / uncomment
+
+%%
+
+figure();
+artefact_color_1 = [0.8500 0.3250 0.0980];
+artefact_color_2 = [0.4660 0.6740 0.1880];
+
+c1 = 1;
+c2 = 2;
+comp_remove = [1, 2, 9];
+
+for i = 1 : size(X, 1)
+    yls = max(X(i, :)); % y lim superior
+    yli = min(X(i, :)); % y lim inferior
+    subplot(size(X, 1), 2, c1)
+    plot(X(i, :));
+    ylim([-4 yls + 0.25*yls]);
+    grid on; grid minor;
+    if i == 1
+        title("Original signal X");
+    end
+%     ylabel(transd_labels(i), 'fontweight','bold');
+    
+    subplot(size(X, 1), 2, c2)
+    if i == comp_remove(1, 1) || i == comp_remove(1, 2) || i == comp_remove(1, 3)
+        plot(Xe(i, :), 'Color', artefact_color_1);       
+    else
+        plot(Xe(i, :));
+    end
+    grid on; grid minor;
+    if i == 1
+        title("ICA components: EOG artefact-rich components in orange");
+    end
+    ica_label = "Comp.";
+    ylabel(strcat(ica_label, int2str(i)), 'fontweight','bold');
+    ylim([-4 yls + 0.25*yls]);
+    c1 = c1 + 2;
+    c2 = c2 + 2;
+end
+
+
 %% Read txt
 % turn txts into column vector
 sleepstages=[];
@@ -126,4 +190,3 @@ for i=1:length(FileNames_txt)
     sleepstages = [sleepstages;ss];
     disp(i+"/"+length(FileNames_txt)+" done")
 end
-
