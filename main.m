@@ -98,12 +98,6 @@ for p=1:5
         end
     end
 end
-<<<<<<< Updated upstream
-selection_info = [common_labs; common_transds; samplingfrequencies];
-
-%%
-=======
->>>>>>> Stashed changes
 
 save('./Selected_dataset/samplingfrequencies.mat','samplingfrequencies')
 disp("sampling frequencies saved")
@@ -133,6 +127,7 @@ disp("n11 saved")
 %% Load selected signals
 
 load('./Selected_dataset/selection_info.mat');disp("selected info loaded")
+load('./Selected_dataset/samplingfrequencies.mat');disp("sfs loaded")
 load('./Selected_dataset/signal_header.mat');disp("header loaded")
 load('./Selected_dataset/n1.mat');disp("n1 loaded")
 load('./Selected_dataset/n2.mat');disp("n2 loaded")
