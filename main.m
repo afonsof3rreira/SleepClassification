@@ -69,23 +69,22 @@ transducers = deblank(transducers);
 %% Selecting signals types common to all patients / datasets
 
 [common_labs, common_transds] = check_common_signals(signal_header);
+ib = zeros(length(signal_header), length(common_transds));
 
-[~, ~, ib] = intersect(common_labs, signal_header{1, 1}.label);
-n1 = n1(ib(:), :);
+[~, ~, ib(1, :)] = intersect(common_labs, signal_header{1, 1}.label);
+n1 = n1(ib(1, :), :);
 
-[~, ~, ib] = intersect(common_labs, signal_header{2, 1}.label);
-n2 = n2(ib(:), :);
+[~, ~, ib(2, :)] = intersect(common_labs, signal_header{2, 1}.label);
+n2 = n2(ib(2, :), :);
 
-[~, ~, ib] = intersect(common_labs, signal_header{3, 1}.label);
-n3 = n3(ib(:), :);
+[~, ~, ib(3, :)] = intersect(common_labs, signal_header{3, 1}.label);
+n3 = n3(ib(3, :), :);
 
-[~, ~, ib] = intersect(common_labs, signal_header{4, 1}.label);
-n5 = n5(ib(:), :);
+[~, ~, ib(4, :)] = intersect(common_labs, signal_header{4, 1}.label);
+n5 = n5(ib(4, :), :);
 
-[~, ~, ib] = intersect(common_labs, signal_header{5, 1}.label);
-n11 = n11(ib(:), :);
-
-clear ib;
+[~, ~, ib(5, :)] = intersect(common_labs, signal_header{5, 1}.label);
+n11 = n11(ib(5, :), :);
 
 samplingfrequencies=zeros(1,length(common_labs));
 for i=1:length(common_labs)
@@ -97,7 +96,9 @@ for i=1:length(common_labs)
         j=j+1;
     end
 end
-selection_info = [common_labs; common_transds;samplingfrequencies];
+selection_info = [common_labs; common_transds; samplingfrequencies];
+
+%%
 
 save('./Selected_dataset/selection_info.mat','selection_info')
 disp("selected info saved")
@@ -129,6 +130,24 @@ load('./Selected_dataset/n2.mat');disp("n2 loaded")
 load('./Selected_dataset/n3.mat');disp("n3 loaded")
 load('./Selected_dataset/n5.mat');disp("n5 loaded")
 load('./Selected_dataset/n11.mat');disp("n11 loaded")
+
+%%
+
+time_mat = {};
+
+for i = 1: length(signal_header)
+    n_records = signal_header{i, 1}.records;
+    n_duration = signal_header{i, 1}.duration;
+    tot_duration = n_records * n_duration;
+    disp(n_records);
+    vals = {};
+    for j = 1 : size(n1, 1)
+        ts = 1 / str2num(selection_info(3, j));
+        vals{1, j} = 0: ts: tot_duration - ts;
+    end
+    time_mat{i, 1} = vals;
+end
+
 
 %% plotting signals
 
