@@ -142,14 +142,45 @@ for i = 1: length(signal_header)
     disp(n_records);
     vals = {};
     for j = 1 : size(n1, 1)
-        ts = 1 / str2num(selection_info(3, j));
-        vals{1, j} = 0: ts: tot_duration - ts;
+        sf = signal_header{i, 1}.samples(1, ib(i, j));
+        ts = 1 / sf; %  str2num(selection_info(3, j));
+        vals{j, 1} = 0: ts: tot_duration - ts;
     end
     time_mat{i, 1} = vals;
 end
 
 
 %% plotting signals
+
+
+for i = 1:5
+    sub_time_mat = time_mat{i, 1};
+    switch i
+        case 1
+            var = n1;
+        case 2
+            var = n2;
+        case 3 
+            var = n3;
+        case 4
+            var = n5;
+        case 5
+            var = n11;
+    end
+    figure();
+    for j = 1: 9
+        time_vec = sub_time_mat{j, 1};
+        time_cropped = size(time_vec, 2);
+        signal = var(j, 1:time_cropped);
+        subplot(9, 1, j);
+        plot(time_vec, signal);
+
+    end
+end
+
+
+
+%% trying ICA
 
 X = n1;
 X = zscore(X');X=X'; % mean => 0, St.D. => 1
