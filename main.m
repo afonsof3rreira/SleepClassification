@@ -3,6 +3,7 @@
 clear
 close all
 warning('off','all')
+%%
 % save edf files and txt files in separate directories as below
 Files_edf = dir('./Files_edf');
 Files_txt = dir('./Files_txt');
@@ -20,7 +21,7 @@ for k=1:length(Files_txt)
         FileNames_txt{i}=(Files_txt(k).name);i=i+1;
     end
 end
-
+clear i k
 %% Get channels and header
 signal=cell(5,1);
 signal_header=cell(5,1);
@@ -135,6 +136,41 @@ load('./Selected_dataset/n3.mat');disp("n3 loaded")
 load('./Selected_dataset/n5.mat');disp("n5 loaded")
 load('./Selected_dataset/n11.mat');disp("n11 loaded")
 
+%% Segment signals
+segmentedsignals=cell(5,9);
+names={'n1','n2','n3','n5','n11'};
+for i=1:length(names)
+    patient=eval(names{i});
+    for j=1:9
+    segmentedsignals{i,j}=segmentsignal(patient(j,:),samplingfrequencies(i,j));
+    end
+end
+clear i j patient
+
+% Synchronize with stages txt files
+for i=1:9
+    segmentedsignals{1,i}=segmentedsignals{1,i}(8:end-6,:);
+    segmentedsignals{2,i}=segmentedsignals{2,i}(3:end,:);
+    segmentedsignals{3,i}=segmentedsignals{3,i}(375:end-97,:);
+    segmentedsignals{4,i}=segmentedsignals{4,i}(102:end-2,:);
+    segmentedsignals{5,i}=segmentedsignals{5,i}(41:end-2,:);
+end
+save('./Selected_dataset/segmentedsignals.mat', 'segmentedsignals', '-v7.3');
+disp("segmentedsignals saved")
+%% Read txt
+% turn txts into column vector
+sleepstages=cell(5,1);
+for i=1:length(FileNames_txt)
+    ss = txt_to_stages(FileNames_txt{i});
+    sleepstages{i,1} = ss;
+    disp(i+"/"+length(FileNames_txt)+" done")
+end
+clear i ss
+save('./Selected_dataset/sleepstages.mat', 'sleepstages', '-v7.3');
+disp("sleepstages saved")
+%% Load segmented signals and sleepstages
+load('./Selected_dataset/segmentedsignals.mat');disp("segmentedsignals loaded")
+load('./Selected_dataset/sleepstages.mat');disp("sleepstages loaded")
 %%
 
 time_mat = {};
@@ -372,21 +408,5 @@ for i = 1 : size(X, 1)
     c2 = c2 + 2;
 end
 
-%% Segment signals
-segmentedsignals=cell(5,9);
-names={'n1','n2','n3','n5','n11'};
-for i=1:length(names)
-    patient=eval(names{i});
-    for j=1:9
-    segmentedsignals{i,j}=segmentsignal(patient(j,:),samplingfrequencies(i,j));
-    end
-end
 
-%% Read txt
-% turn txts into column vector
-sleepstages=[];
-for i=1:length(FileNames_txt)
-    ss = txt_to_stages(FileNames_txt{i});
-    sleepstages = [sleepstages;ss];
-    disp(i+"/"+length(FileNames_txt)+" done")
-end
+
