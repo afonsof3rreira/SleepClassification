@@ -156,33 +156,159 @@ end
 
 %% plotting signals
 
+whole_sample = false;
 
+signal_name = "";
 for i = 1:5
     sub_time_mat = time_mat{i, 1};
     switch i
         case 1
             var = n1;
+            signal_name = "n1";
         case 2
             var = n2;
+            signal_name = "n2";
         case 3 
             var = n3;
+            signal_name = "n3";
         case 4
             var = n5;
+            signal_name = "n5";
         case 5
             var = n11;
+            signal_name = "n11";
     end
     figure();
     for j = 1: 9
         time_vec = sub_time_mat{j, 1};
-        time_cropped = size(time_vec, 2);
-        signal = var(j, 1:time_cropped);
         subplot(9, 1, j);
-        plot(time_vec, signal);
+        
+        if whole_sample
+            time_cropped = size(time_vec, 2);
+        else
+            end_time = 20; % in seconds
+            time_cropped = find(time_vec==20);
+        end
+   
+        signal = var(j, 1:time_cropped);
+        plot(time_vec(1:time_cropped), signal);
 
+        title(selection_info(1, j) + " " + num2str(1/time_vec(2)));
+    end
+    sgtitle("Signal " + signal_name);
+    xlabel("time [s]");
+end
+
+%% Checking which signals to upsample
+max_sfs = check_s_freqs(ib, signal_header);
+
+%% Upsampling
+clearvars -except ib signal_header n1 n2 n3 n5 n11 max_sfs time_mat selection_info
+
+n1_ = zeros(size(n1, 1), size(n1, 2));
+n2_ = zeros(size(n2, 1), size(n2, 2));
+n3_ = zeros(size(n3, 1), size(n3, 2));
+n5_ = zeros(size(n5, 1), size(n5, 2));
+n11_ = zeros(size(n11, 1), size(n11, 2));
+
+
+for i = 1: size(ib, 1)
+    disp(i);
+    for j = 1: size(ib, 2)
+        if signal_header{i, 1}.samples(ib(i, j)) ~= max_sfs(i)
+            disp(signal_header{i, 1}.label(ib(i, j)));
+            sf = max_sfs(i);
+            len = size(time_mat{i, 1}{j, 1}, 2);
+            factor = sf/signal_header{i, 1}.samples(ib(i, j));
+            switch i
+                case 1
+                    n1_(j, :) = resample(n1(j, 1:len), factor, 1);
+                case 2
+                    n2_(j, :) = resample(n2(j, 1:len), factor, 1);
+                case 3 
+                    n3_(j, :) = resample(n3(j, 1:len), factor, 1);
+                case 4
+                    n5_(j, :) = resample(n5(j, 1:len), factor, 1);
+                case 5
+                    n11_(j, :) = resample(n11(j, 1:len), factor, 1);
+            end
+        else
+            switch i
+                case 1
+                    n1_(j, :) = n1(j, :);
+                case 2
+                    n2_(j, :) = n2(j, :);
+                case 3 
+                    n3_(j, :) = n3(j, :);
+                case 4
+                    n5_(j, :) = n5(j, :);
+                case 5
+                    n11_(j, :) = n11(j, :);
+            end
+        end
     end
 end
 
+%% plotting signals (2.0)
 
+whole_sample = false;
+scatter = false;
+
+signal_name = "";
+for i = 1:5
+    sub_time_mat = time_mat{i, 1};
+    switch i
+        case 1
+            var = n1;
+            var_ = n1_;
+            signal_name = "n1";
+        case 2
+            var = n2;
+            var_ = n2_;
+            signal_name = "n2";
+        case 3
+            var = n3;   
+            var_ = n3_;
+            signal_name = "n3";
+        case 4
+            var = n5;   
+            var_ = n5_;
+            signal_name = "n5";
+        case 5
+            var = n11;   
+            var_ = n11_;
+            signal_name = "n11";
+    end
+    figure(); 
+    for j = 1: 9
+        time_vec_res = sub_time_mat{1, 1};
+        time_vec = sub_time_mat{j, 1};
+        ax(j) = subplot(9, 1, j);
+        
+        if whole_sample
+            time_cropped = size(time_vec_res, 2);
+        else
+            end_time = 20; % in seconds
+            time_cropped_ = find(time_vec_res==20);
+            time_cropped = find(time_vec==20);
+        end
+   
+        signal_ = var_(j, 1:time_cropped_);
+        signal = var(j, 1:time_cropped);
+        if scatter
+            scatter(time_vec_res(1:time_cropped_), signal_); hold on;
+            scatter(time_vec(1:time_cropped), signal); hold off;
+        else
+            plot(time_vec_res(1:time_cropped_), signal_); hold on;
+            plot(time_vec(1:time_cropped), signal); hold off;
+        end
+        title(selection_info(1, j) + " " + num2str(1/time_vec(2)));
+    end
+    linkaxes(ax(:));
+    sgtitle("Signal " + signal_name);
+    xlabel("time [s]");
+    clear ax
+end
 
 %% trying ICA
 
