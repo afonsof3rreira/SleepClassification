@@ -238,9 +238,23 @@ for i = 1:5
 end
 
 %% Checking which signals to upsample
+load('./Selected_dataset/selected_indices.mat');disp("signal selection loaded")
+load('./Selected_dataset/signal_header.mat');disp("signal header")
+
+ib = selected_indices;
 max_sfs = check_s_freqs(ib, signal_header);
 
 %% Upsampling
+% INPUT:
+    % Common selected raw signals: n1, n2, n3, n5, n11
+    % Mat containing time vectors of the original raw signals: time_mat
+    % Header of the raw signals: signal_header
+    % Indices of common signals in the signal_header: ib
+    % Mat containing maximum sampling frequencies of each signal type: max_sfs
+    
+% OUTPUT:
+    % Upsampled original raw signals: n1_, n2_, n3_, n5_, n11_
+    
 clearvars -except ib signal_header n1 n2 n3 n5 n11 max_sfs time_mat selection_info
 
 n1_ = zeros(size(n1, 1), size(n1, 2));
@@ -287,7 +301,7 @@ for i = 1: size(ib, 1)
     end
 end
 
-%% plotting signals (2.0)
+%% PLOTTING TO CONFIRM UPSAMPLING
 
 whole_sample = false;
 scatter = false;
@@ -349,7 +363,7 @@ for i = 1:5
 end
 
 
-%% saving resampled signals
+%% saving resampled signals: SKIP TO SAVE DISK SPACE
 
 disp("...saving resampled data");
 
@@ -376,8 +390,8 @@ disp("n5 saved")
 save('./Resampled_dataset/n11.mat', 'n11_', '-v7.3')
 disp("n11 saved")
 
-%% Load resampled signals
-clear 
+%% Load resampled signals: SKIP TO SAVE DISK SPACE
+
 load('./Resampled_dataset/signal_header.mat');disp("signal header loaded")
 load('./Selected_dataset/selected_indices.mat');disp("signal selection loaded")
 load('./Selected_dataset/selection_info.mat');disp("signal info loaded")
@@ -388,60 +402,91 @@ load('./Resampled_dataset/n3.mat');disp("n3 loaded")
 load('./Resampled_dataset/n5.mat');disp("n5 loaded")
 load('./Resampled_dataset/n11.mat');disp("n11 loaded")
 
-%% trying ICA
+%% Performing ICA
+
+% INPUT:
+    % Upsampled original raw signals: n1_, n2_, n3_, n5_, n11_
+    
+% OUTPUT:
+    % StD. data of the upsampled unormalized data: mu_data
+    % Mean data of the upsampled unormalized data: mean_data
+    % Fast ICA results:  fastica_result_n1, ..., fastica_result_n11
+
+% Process:
+% 1) picking upsampled signals e.g. Z = n1_;
+% 2) Performing zscore normalization, saving original StD. and Mean on mat
+% files;
+% 3) Performing ICA, saving the results in structures;
 
 clearvars -except n1_ n2_ n3_ n5_ n11_ time_vec signal_header selected_indices selection_info
 
+mu_data = zeros(5, 9);
+mean_data = zeros(5, 9);
 
 for i = 1: 5
+    
+    % Mapping indices to upsampled signals (1 = n1_, 2 = n2_, ...)
     switch i
+        
         case 1
-            var_ = n1_;
-            signal_name = "n1";
+            Z = n1_;
+            [Z, mu_data(i, :), mean_data(i, :)] = zscore(Z'); % mean => 0, St.D. => 1
+            Z=Z';
+            [Xe, A, W] = fastica (Z);
+            
         case 2
-            var_ = n2_;
-            signal_name = "n2";
+            Z = n2_;
+            [Z, mu_data(i, :), mean_data(i, :)] = zscore(Z'); % mean => 0, St.D. => 1
+            Z=Z';
+            [Xe, A, W] = fastica (Z);
+            
         case 3
-            var_ = n3_;
-            signal_name = "n3";
+            Z = n3_;
+            [Z, mu_data(i, :), mean_data(i, :)] = zscore(Z'); % mean => 0, St.D. => 1
+            Z=Z';
+            [Xe, A, W] = fastica (Z);
+            
         case 4
-            var_ = n5_;
-            signal_name = "n5";
+            Z = n5_;
+            [Z, mu_data(i, :), mean_data(i, :)] = zscore(Z'); % mean => 0, St.D. => 1
+            Z=Z';
+            [Xe, A, W] = fastica (Z);
+            
         case 5
-            var_ = n11_;
-            signal_name = "n11";
+            Z = n11_;
+            [Z, mu_data(i, :), mean_data(i, :)] = zscore(Z'); % mean => 0, St.D. => 1
+            Z=Z';
+            [Xe, A, W] = fastica (Z);
+            
     end
-    X = var_;
-    X = zscore(X');
-    X=X'; % mean => 0, St.D. => 1
-    [Xe, A, W] = fastica (X);
+   
     switch i
         case 1
-            n1_n = X;
+            n1_n = Z;
             fastica_result_n1 = struct;
             fastica_result_n1.Xe_n1 = Xe;
             fastica_result_n1.A_n1 = A;
             fastica_result_n1.W_n1 = W;
         case 2
-            n2_n = X;
+            n2_n = Z;
             fastica_result_n2 = struct;
             fastica_result_n2.Xe_n2 = Xe;
             fastica_result_n2.A_n2 = A;
             fastica_result_n2.W_n2 = W;
         case 3
-            n3_n = X;
+            n3_n = Z;
             fastica_result_n3 = struct;
             fastica_result_n3.Xe_n3 = Xe;
             fastica_result_n3.A_n3 = A;
             fastica_result_n3.W_n3 = W;
         case 4
-            n5_n = X;
+            n5_n = Z;
             fastica_result_n5 = struct;
             fastica_result_n5.Xe_n5 = Xe;
             fastica_result_n5.A_n5 = A;
             fastica_result_n5.W_n5 = W;
         case 5
-            n11_n = X;
+            n11_n = Z;
             fastica_result_n11 = struct;
             fastica_result_n11.Xe_n11 = Xe;
             fastica_result_n11.A_n11 = A;
@@ -449,57 +494,68 @@ for i = 1: 5
     end
 end
 
-% save('./ICA_components/n1_n.mat', 'n1_n', '-v7.3');
-% save('./ICA_components/n2_n.mat', 'n2_n', '-v7.3');
-% save('./ICA_components/n3_n.mat', 'n3_n', '-v7.3');
-% save('./ICA_components/n5_n.mat', 'n5_n', '-v7.3');
-% save('./ICA_components/n11_n.mat', 'n11_n', '-v7.3');
-% 
-% save('./ICA_components/fastica_result_n1.mat', 'fastica_result_n1', '-v7.3');
-% save('./ICA_components/fastica_result_n2.mat', 'fastica_result_n2', '-v7.3');
-% save('./ICA_components/fastica_result_n3.mat', 'fastica_result_n3', '-v7.3');
-% save('./ICA_components/fastica_result_n5.mat', 'fastica_result_n5', '-v7.3');
-% save('./ICA_components/fastica_result_n11.mat', 'fastica_result_n11', '-v7.3');
+%% saving ICA results - normalized data for comparison: SKIP TO SAVE DISK SPACE
 
+save('./ICA_components/n1_n.mat', 'n1_n', '-v7.3');
+save('./ICA_components/n2_n.mat', 'n2_n', '-v7.3');
+save('./ICA_components/n3_n.mat', 'n3_n', '-v7.3');
+save('./ICA_components/n5_n.mat', 'n5_n', '-v7.3');
+save('./ICA_components/n11_n.mat', 'n11_n', '-v7.3');
+
+%% saving ICA results - fastICA results: SKIP TO SAVE DISK SPACE
+
+save('./ICA_components/fastica_result_n1.mat', 'fastica_result_n1', '-v7.3');
+save('./ICA_components/fastica_result_n2.mat', 'fastica_result_n2', '-v7.3');
+save('./ICA_components/fastica_result_n3.mat', 'fastica_result_n3', '-v7.3');
+save('./ICA_components/fastica_result_n5.mat', 'fastica_result_n5', '-v7.3');
+save('./ICA_components/fastica_result_n11.mat', 'fastica_result_n11', '-v7.3');
+
+%% saving ICA results - mean and mu data: SKIP TO SAVE DISK SPACE
+
+save('./ICA_components/mu_data.mat', 'mu_data', '-v7.3');
+save('./ICA_components/mean_data.mat', 'mean_data', '-v7.3');
+
+%% Computing original data mean and StD. only
+% INPUT:
+    % Upsampled original raw signals: n1_, n2_, n3_, n5_, n11_
+    
+% OUTPUT:
+    % StD. data of the upsampled unormalized data: mu_data
+    % Mean data of the upsampled unormalized data: mean_data
+    
+mu_data = zeros(5, 9);
+mean_data = zeros(5, 9);
+    
 for i = 1: 5
+    % Mapping indices to upsampled signals (1 = n1_, 2 = n2_, ...)
     switch i
         case 1
-            X = n1_;
-            X = zscore(X');
-            n1_n = X';
+            [~, mu_data(i, :), mean_data(i, :)] = zscore(n1_');            
         case 2
-            X = n2_;
-            X = zscore(X');
-            n2_n = X';
+            [~, mu_data(i, :), mean_data(i, :)] = zscore(n2_'); 
         case 3
-            X = n3_;
-            X = zscore(X');
-            n3_n = X';
+            [~, mu_data(i, :), mean_data(i, :)] = zscore(n3_'); 
         case 4
-            X = n5_;
-            X = zscore(X');
-            n5_n = X';
+            [~, mu_data(i, :), mean_data(i, :)] = zscore(n5_');
         case 5
-            X = n11_;
-            X = zscore(X');
-            n11_n = X';
+            [~, mu_data(i, :), mean_data(i, :)] = zscore(n11_');     
     end
-
 end
 
-save('./Resampled_normalized_dataset/n1_n.mat', 'n1_n', '-v7.3');
-save('./Resampled_normalized_dataset/n2_n.mat', 'n2_n', '-v7.3');
-save('./Resampled_normalized_dataset/n3_n.mat', 'n3_n', '-v7.3');
-save('./Resampled_normalized_dataset/n5_n.mat', 'n5_n', '-v7.3');
-save('./Resampled_normalized_dataset/n11_n.mat', 'n11_n', '-v7.3');
+%% saving ICA results - mean and mu data: SKIP TO SAVE DISK SPACE
 
-%%
+save('./ICA_components/mu_data.mat', 'mu_data', '-v7.3');
+save('./ICA_components/mean_data.mat', 'mean_data', '-v7.3');
+
+%% saving ICA results - fastICA results: SKIP TO SAVE DISK SPACE
 
 load('./ICA_components/fastica_result_n1'); disp("fastica_result_n1 loaded");
 load('./ICA_components/fastica_result_n2'); disp("fastica_result_n2 loaded");
 load('./ICA_components/fastica_result_n3'); disp("fastica_result_n3 loaded");
 load('./ICA_components/fastica_result_n5'); disp("fastica_result_n5 loaded");
 load('./ICA_components/fastica_result_n11'); disp("fastica_result_n11 loaded");
+
+%% loading normalized data for comparison
 
 load('./Resampled_normalized_dataset/n1_n.mat'); disp("n1_n loaded");
 load('./Resampled_normalized_dataset/n2_n.mat'); disp("n2_n loaded");
@@ -508,9 +564,10 @@ load('./Resampled_normalized_dataset/n5_n.mat'); disp("n5_n loaded");
 load('./Resampled_normalized_dataset/n11_n.mat'); disp("n11_n loaded");
 
 %%
+
+time_vec = time_mat{1, 1}{1, 1};
 last_t_ind = find(time_vec==20);
-emg_inds = [3, 2, 3, 5, 4;...
-            4, 1, 4, 2, 1]';
+
 eog_inds = [5, 5, 7, 4, 7];
 
 artefact_color_1 = [0.8500 0.3250 0.0980];
@@ -596,11 +653,8 @@ for j = 1: 5
 
 end
 
-%%
-emg_inds = [3, 2, 3, 5, 4;...
-            4, 1, 4, 2, 1]';
+%% Removing EOG contamination from EEGs
 eog_inds = [5, 5, 7, 4, 7];
-ecg_inds = [8, 4, 6, 7, 6];
         
 G_1_n1 = fastica_result_n1.A_n1;
 G_1_n1(:, eog_inds(1, 1)) = 0; % (3)
@@ -622,7 +676,7 @@ G_1_n11 = inv(fastica_result_n11.W_n11);
 G_1_n11(:, eog_inds(1, 5)) = 0; % (3)
 xx_1_n11 = G_1_n11*fastica_result_n11.Xe_n11;
 
-%%
+%% Resetting back all non-EEG signals
 
 reset_s = [3, 4, 6, 8, 9];
 
@@ -634,13 +688,57 @@ xx_1_n11(reset_s(:), :) = n11_n(reset_s(:), :);
 
 
 
-%%
+%% saving upsampled normalized EOG filtered EEG signals + others unfiltered: SKIP TO SAVE DISK SPACE
 save('./Resampled_normalized_dataset_post_ICA_EOG/xx_1_n1.mat', 'xx_1_n1', '-v7.3');
 save('./Resampled_normalized_dataset_post_ICA_EOG/xx_1_n2.mat', 'xx_1_n2', '-v7.3');
 save('./Resampled_normalized_dataset_post_ICA_EOG/xx_1_n3.mat', 'xx_1_n3', '-v7.3');
 save('./Resampled_normalized_dataset_post_ICA_EOG/xx_1_n5.mat', 'xx_1_n5', '-v7.3');
 save('./Resampled_normalized_dataset_post_ICA_EOG/xx_1_n11.mat', 'xx_1_n11', '-v7.3');
 
+%% loading upsampled normalized EOG filtered EEG signals + others unfiltered + mean and StD.
+load('./ICA_components/mu_data.mat'); disp("Mean loaded");
+load('./ICA_components/mean_data.mat'); disp("StD. loaded");
+
+load('./Resampled_normalized_dataset_post_ICA_EOG/xx_1_n1.mat'); disp("xx_1_n1 loaded");
+load('./Resampled_normalized_dataset_post_ICA_EOG/xx_1_n2.mat'); disp("xx_1_n2 loaded");
+load('./Resampled_normalized_dataset_post_ICA_EOG/xx_1_n3.mat'); disp("xx_1_n3 loaded");
+load('./Resampled_normalized_dataset_post_ICA_EOG/xx_1_n5.mat'); disp("xx_1_n5 loaded");
+load('./Resampled_normalized_dataset_post_ICA_EOG/xx_1_n11.mat'); disp("xx_1_n11 loaded");
+
+%% Denormalizing data
+save_data = true;
+
+for i = 1: 5
+    switch i
+        case 1
+            n1_ef = xx_1_n1.*mean_data(i, :)' + mu_data(i, :)';
+            disp("something");
+            if save_data
+                save('./Resampled_EOG_filt/n1_ef.mat', 'n1_ef', '-v7.3');
+            end
+        case 2
+            n2_ef = xx_1_n2.*mean_data(i, :)' + mu_data(i, :)';
+            if save_data
+                save('./Resampled_EOG_filt/n2_ef.mat', 'n2_ef', '-v7.3');
+            end
+        case 3
+            n3_ef = xx_1_n3.*mean_data(i, :)' + mu_data(i, :)';
+            if save_data
+                save('./Resampled_EOG_filt/n3_ef.mat', 'n3_ef', '-v7.3');
+            end
+        case 4
+            n5_ef = xx_1_n5.*mean_data(i, :)' + mu_data(i, :)';
+            if save_data
+                save('./Resampled_EOG_filt/n5_ef.mat', 'n5_ef', '-v7.3');
+            end
+        case 5
+            n11_ef = xx_1_n11.*mean_data(i, :)' + mu_data(i, :)';
+            if save_data
+                save('./Resampled_EOG_filt/n11_ef.mat', 'n11_ef', '-v7.3');
+            end
+    end
+    disp("Signal " + num2str(i) + "/5 done.");
+end
 
 %%
 artefact_color_1 = [0.8500 0.3250 0.0980];
@@ -729,30 +827,37 @@ for j = 1: 5
 
 end
 
-%%
+%% Comparing denormalized EOG-filtered EEGs with Raw signals
+load('./Resampled_dataset/time_vec.mat');disp("time vector loaded")
+load('./Resampled_dataset/n1.mat');disp("n1 loaded")
+load('./Resampled_dataset/n2.mat');disp("n2 loaded")
+load('./Resampled_dataset/n3.mat');disp("n3 loaded")
+load('./Resampled_dataset/n5.mat');disp("n5 loaded")
+load('./Resampled_dataset/n11.mat');disp("n11 loaded")
+
 last_t_ind = find(time_vec==20);
 
 for j = 1: 5
     switch j
         case 1
-            xx = xx_1_n1;
-            X = n1_n;
+            xx = n1_ef;
+            X = n1_;
             signal_name = "n1";
         case 2
-            xx = xx_1_n2;
-            X = n2_n;
+            xx = n2_ef;
+            X = n2_;
             signal_name = "n2";
         case 3
-            xx = xx_1_n3;
-            X = n3_n;
+            xx = n3_ef;
+            X = n3_;
             signal_name = "n3";
         case 4
-            xx = xx_1_n5;
-            X = n5_n;
+            xx = n5_ef;
+            X = n5_;
             signal_name = "n5";
         case 5
-            xx = xx_1_n11;
-            X = n11_n;
+            xx = n11_ef;
+            X = n11_;
             signal_name = "n11";
     end
     
