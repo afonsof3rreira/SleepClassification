@@ -10,6 +10,7 @@ for i=1:4
     else sf=sfs(7);end
     eeg=EEG(i,:);deeg=gradient(eeg,1/sf);ddeeg=gradient(deeg,1/sf);
     l=length(eeg);
+    
     %calculo das features
     waves=WavesEEG(eeg, sf);
     kurt=kurtosis(eeg);
@@ -17,15 +18,23 @@ for i=1:4
     zc=zerocrossings(deeg); pfd=log10(l)/(log10(l)+log10(l/(l+0.4*zc)));
     v0=var(eeg);v1=var(deeg);v2=var(ddeeg);
     hjorth=[(v0^2) v1/v2 sqrt((v2/c1)^2-(v1/v0)^2)];
+    
+    
     features=[features waves kurt sk pfd hjorth];
 end
 
 %EMG features
+rms1=rootmeansquare(EMG1);
+rms2=rootmeansquare(EMG2);
+pp1=maxpeaktopeak(EMG1);
+pp2=maxpeaktopeak(EMG2);
 
-
+features=[features rms1 rms2 pp1 pp2];
 %EOG features
+nblinks = blinks(EOG, sfs(8));features=[features nblinks];
 
+%ECG features
+hr=mean(HR);features=[features hr];
 
-%put all features in a vector
 end
 
