@@ -138,7 +138,7 @@ load('./Selected_dataset/n11.mat');disp("n11 loaded")
 
 %% Segment signals
 segmentedsignals=cell(5,9);
-names={'n1','n2','n3','n5','n11'};
+names={'n1','n2','n3','n5','n11'}; % names of variables we are segmenting in 30s epochs
 for i=1:length(names)
     patient=eval(names{i});
     for j=1:9
