@@ -86,7 +86,7 @@ n5 = n5(ib(4, :), :);
 
 [~, ~, ib(5, :)] = intersect(common_labs, signal_header{5, 1}.label);
 n11 = n11(ib(5, :), :);
-
+%%
 samplingfrequencies=zeros(5,length(common_labs));
 for p=1:5
     for i=1:length(common_labs)
@@ -342,7 +342,7 @@ for i = 1:5
         end
         title(selection_info(1, j) + " " + num2str(1/time_vec(2)));
     end
-    linkaxes(ax(:));
+    linkaxes(ax(:),"x");
     sgtitle("Signal " + signal_name);
     xlabel("time [s]");
     clear ax
