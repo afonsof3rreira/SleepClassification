@@ -9,13 +9,13 @@ for i=1:4
     elseif i==3, sf=sfs(5);
     else sf=sfs(7);end
     eeg=EEG(i,:);deeg=gradient(eeg,1/sf);ddeeg=gradient(deeg,1/sf);
-    l=length(eeg);
+    n=length(eeg);
     
     %calculo das features
-    waves=WavesEEG(eeg, sf);
+    waves=waves_eeg1(eeg, sf);
     kurt=kurtosis(eeg);
     sk=skewness(eeg);
-    zc=zerocrossings(deeg); pfd=log10(l)/(log10(l)+log10(l/(l+0.4*zc)));
+    zc=zerocrossings(deeg); pfd=log10(n)/(log10(n)+log10(n/(n+0.4*zc)));
     v0=var(eeg);v1=var(deeg);v2=var(ddeeg);
     hjorth=[(v0^2) v1/v2 sqrt((v2/c1)^2-(v1/v0)^2)];
     
