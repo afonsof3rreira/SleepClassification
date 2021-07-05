@@ -1,17 +1,11 @@
-function [percentalpha, percentbeta, percenttheta, percentdelta] = waves_eeg1(EEG, Fsample)
-    Hs = spectrum.welch;
-    Spectrum = psd(Hs,EEG,'Fs',Fsample);
-    total= trapz(Spectrum.data);
-    
-    alpha=trapz(Spectrum.data(9:14));
-    percentalpha= alpha/total;
-    
-    beta= trapz(Spectrum.data(14:31));
-    percentbeta=beta/total;
-    
-    theta= trapz(Spectrum.data(5:9));
-    percenttheta= theta/total;
-    
-    delta= trapz(Spectrum.data(1:5));
-    percentdelta=delta/total;
+function [percentalpha, percentbeta, percenttheta, percentdelta] = waves_eeg1(EEG, sf)
+total=bandpower(EEG,sf,[0 sf/2]);
+
+alpha=bandpower(EEG,sf,[8 13]);percentalpha= alpha/total;
+
+beta= bandpower(EEG,sf,[18 25]);percentbeta=beta/total;
+
+theta= bandpower(EEG,sf,[4 8]);percenttheta= theta/total;
+
+delta= bandpower(EEG,sf,[0.5 2]);percentdelta=delta/total;
 end
