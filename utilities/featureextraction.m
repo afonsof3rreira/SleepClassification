@@ -5,9 +5,14 @@ features=[];
 %EEG features
 EEG=[EEG1; EEG2; EEG3; EEG4];
 for i=1:4
-    if i<3, sf=sfs(i);
-    elseif i==3, sf=sfs(5);
-    else sf=sfs(7);end
+    if i<3 
+        sf=sfs(i);
+    elseif i==3
+        sf=sfs(5);
+    else
+        sf=sfs(7);
+    end
+    
     eeg=EEG(i,:);deeg=gradient(eeg,1/sf);ddeeg=gradient(deeg,1/sf);
     n=length(eeg);
     
@@ -34,7 +39,11 @@ features=[features rms1 rms2 pp1 pp2];
 nblinks = blinks(EOG, sfs(8));features=[features nblinks];
 
 %ECG features
-hr=mean(HR);features=[features hr];
-
+hr=mean(HR);
+hrv=HRintervals(ECG);
+meaninterval=mean(hrv);
+stdinterval=std(hrv);
+difmaxmin=max(hrv)-min(hrv);
+features=[features hr meaninterval stdinterval difmaxmin];
 end
 
