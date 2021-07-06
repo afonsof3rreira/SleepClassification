@@ -24,6 +24,7 @@ for p=1:npatient
         EMG2=segmentedsignals{p,9}(epoch,:);
         
         epochfeatures=featureextraction(EEG1,EEG2,ECG,EMG1,EEG3,HR,EEG4,EOG,EMG2, sfs);
+        disp("patient: "+p+" epoch: "+epoch)
         features=[features; epochfeatures];
     end
 end
