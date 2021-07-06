@@ -23,9 +23,9 @@ for i=1:4
     zc=zerocrossings(deeg); pfd=log10(n)/(log10(n)+log10(n/(n+0.4*zc)));
     v0=var(eeg);v1=var(deeg);v2=var(ddeeg);
     hjorth=[(v0^2) v1/v2 sqrt((v2/c1)^2-(v1/v0)^2)];
-    
-    
-    features=[features waves kurt sk pfd hjorth];
+    kc=Kcomplexes(eeg,sf);
+    slsp=sleepspindles1(eeg,sf);
+    features=[features waves kurt sk pfd hjorth kc slsp];
 end
 
 %EMG features
