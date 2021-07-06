@@ -17,7 +17,7 @@ for i=1:4
     n=length(eeg);
     
     %calculo das features
-    waves=waves_eeg1(eeg, sf);
+    [a,b,t,d]=waves_eeg1(eeg, sf);waves=[a b t d];
     kurt=kurtosis(eeg);
     sk=skewness(eeg);
     zc=zerocrossings(deeg); pfd=log10(n)/(log10(n)+log10(n/(n+0.4*zc)));
