@@ -855,6 +855,7 @@ end
 
 %% Segment signals and save (SKIP TO SAVE DISK SPACE)
 segmentedsignals=cell(5,9);
+samplingfrequencies=512.*ones(5,9);
 names={'n1_ef','n2_ef','n3_ef','n5_ef','n11_ef'}; % names of variables we are segmenting in 30s epochs
 for i=1:length(names)
     patient=eval(names{i});
@@ -872,7 +873,7 @@ for i=1:9
     segmentedsignals{4,i}=segmentedsignals{4,i}(102:end-2,:);
     segmentedsignals{5,i}=segmentedsignals{5,i}(41:end-2,:);
 end
-
+%%
 save('./Selected_dataset/segmentedsignals.mat', 'segmentedsignals', '-v7.3');
 disp("segmentedsignals saved")
 %% Read txt (SKIP)
