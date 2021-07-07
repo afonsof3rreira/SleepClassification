@@ -120,27 +120,28 @@ load('./data/raw_data/mat_files/n5.mat');disp("n5 loaded")
 load('./data/raw_data/mat_files/n11.mat');disp("n11 loaded")
 
 %% 7. Segment signals
-segmentedsignals=cell(5,9);
+segmentedsignals_raw=cell(5,9);
 names={'n1','n2','n3','n5','n11'}; % names of variables we are segmenting in 30s epochs
 for i=1:length(names)
     patient=eval(names{i});
     for j=1:9
-    segmentedsignals{i,j}=segmentsignal(patient(j,:), samplingfrequencies(i,j));
+    segmentedsignals_raw{i,j}=segmentsignal(patient(j,:), samplingfrequencies(i,j));
     end
 end
 clear i j patient
 
 % Synchronize with stages txt files
 for i=1:9
-    segmentedsignals{1,i}=segmentedsignals{1,i}(8:end-6,:);
-    segmentedsignals{2,i}=segmentedsignals{2,i}(3:end,:);
-    segmentedsignals{3,i}=segmentedsignals{3,i}(375:end-97,:);
-    segmentedsignals{4,i}=segmentedsignals{4,i}(102:end-2,:);
-    segmentedsignals{5,i}=segmentedsignals{5,i}(41:end-2,:);
+    segmentedsignals_raw{1,i}=segmentedsignals_raw{1,i}(8:end-6,:);
+    segmentedsignals_raw{2,i}=segmentedsignals_raw{2,i}(3:end,:);
+    segmentedsignals_raw{3,i}=segmentedsignals_raw{3,i}(375:end-97,:);
+    segmentedsignals_raw{4,i}=segmentedsignals_raw{4,i}(102:end-2,:);
+    segmentedsignals_raw{5,i}=segmentedsignals_raw{5,i}(41:end-2,:);
 end
 
-clear i names patient samplingfrequencies
+clear i names patient %samplingfrequencies
 
+save('./data/segmented_signals/segmentedsignals_raw.mat', 'segmentedsignals_raw', '-v7.3');
 
 %% 8. Read txt (ground truths)
 % turn txts into column vector
@@ -163,8 +164,8 @@ save('./data/ground_truth/sleepstages.mat', 'sleepstages', '-v7.3');
 disp("sleepstages saved")
 
 %% 9.B Load segmented signals and sleepstages
-load('./Selected_dataset/segmentedsignals.mat');disp("segmentedsignals loaded")
-load('./Selected_dataset/sleepstages.mat');disp("sleepstages loaded")
+load('./data/segmented_signals/segmentedsignals.mat');disp("segmentedsignals loaded")
+load('./data/ground_truth/sleepstages.mat');disp("sleepstages loaded")
 
 %% 10. Getting time arrays of the original signals
 
@@ -233,12 +234,12 @@ disp("n11 saved")
 
 load('./data/raw_data/mat_files/signal_header.mat');disp("signal header loaded")
 load('./data/raw_data/mat_files/selection_info.mat');disp("signal info loaded")
-load('./Resampled_dataset/time_vec.mat');disp("time vector loaded")
-load('./data/resampled_signals/n1.mat');disp("n1 loaded")
-load('./data/resampled_signals/n2.mat');disp("n2 loaded")
-load('./data/resampled_signals/n3.mat');disp("n3 loaded")
-load('./data/resampled_signals/n5.mat');disp("n5 loaded")
-load('./data/resampled_signals/n11.mat');disp("n11 loaded")
+load('./data/resampled_signals/time_vec.mat');disp("time vector loaded")
+load('./data/resampled_signals/n1_.mat');disp("n1 loaded")
+load('./data/resampled_signals/n2_.mat');disp("n2 loaded")
+load('./data/resampled_signals/n3_.mat');disp("n3 loaded")
+load('./data/resampled_signals/n5_.mat');disp("n5 loaded")
+load('./data/resampled_signals/n11_.mat');disp("n11 loaded")
 
 %% 16. Performing z-score normalization followed by ICA
 
@@ -261,8 +262,8 @@ save('./data/resampled_signals/ICA_components/fastica_result_n5.mat', 'fastica_r
 save('./data/resampled_signals/ICA_components/fastica_result_n11.mat', 'fastica_result_n11', '-v7.3');
 
 % mean and StD. of original data, needed for denormalization
-save('./data/resampled_signals/mu_data.mat', 'mu_data', '-v7.3');
-save('./data/resampled_signals/mean_data.mat', 'mean_data', '-v7.3');
+save('./data/resampled_signals/ICA_components/mu_data.mat', 'mu_data', '-v7.3');
+save('./data/resampled_signals/ICA_componentsmean_data.mat', 'mean_data', '-v7.3');
 
 %% 17.B loading ICA results - fastICA results: LOAD TO KEEP DATA CONSISTENT
 
@@ -285,10 +286,10 @@ eog_inds = [5, 5, 7, 4, 7];
 reset_s = [3, 4, 6, 8, 9];
 
 xx_1_n1 = EOG_ICA_removal(fastica_result_n1, n1_n, eog_inds, reset_s, 1);
-xx_1_n2 = EOG_ICA_removal(fastica_result_n1, n2_n, eog_inds, reset_s, 2);
-xx_1_n3 = EOG_ICA_removal(fastica_result_n1, n3_n, eog_inds, reset_s, 3);
-xx_1_n5 = EOG_ICA_removal(fastica_result_n1, n5_n, eog_inds, reset_s, 4);
-xx_1_n11 = EOG_ICA_removal(fastica_result_n1, n11_n, eog_inds, reset_s, 5);
+xx_1_n2 = EOG_ICA_removal(fastica_result_n2, n2_n, eog_inds, reset_s, 2);
+xx_1_n3 = EOG_ICA_removal(fastica_result_n3, n3_n, eog_inds, reset_s, 3);
+xx_1_n5 = EOG_ICA_removal(fastica_result_n5, n5_n, eog_inds, reset_s, 4);
+xx_1_n11 = EOG_ICA_removal(fastica_result_n11, n11_n, eog_inds, reset_s, 5);
 
 %% 19. Denormalizing data
 
@@ -318,30 +319,105 @@ load('./data/resampled_signals/EOG_filt/n11_ef.mat');
 %% 21. Comparing denormalized EOG-filtered EEGs with Raw signals
 plot_1v1_EOG_artefact(n1_, n1_ef, time_vec, find(time_vec==20), "n1", selection_info);
 
+%% 22 Clear signals so save space
+
+clear n1_ n1_n n2_ n2_n n3_ n3_n n5_ n5_n n11_ n11_n fastica_result_n1 fastica_result_n2 fastica_result_n3 fastica_result_n5 fastica_result_n11
+
+%% 23 Filter signals
+load("./Filters/high_sf512.mat");
+load("./Filters/high_sf128.mat");
+load("./Filters/high_emg_sf256.mat");
+load("./Filters/high_emg_sf128.mat");
+load("./Filters/low_sf512.mat");
+load("./Filters/notch_sf512.mat");
+load("./Filters/notch_sf256.mat");
+load("./Filters/notch_sf128.mat");
+
+n1p = zeros(size(n1_ef, 1), size(n1_ef, 2)); n1p(6,:) = n1_ef(6,:);
+n2p = zeros(size(n2_ef, 1), size(n2_ef, 2)); n2p(6,:) = n2_ef(6,:);
+n3p = zeros(size(n3_ef, 1), size(n3_ef, 2)); n3p(6,:) = n3_ef(6,:);
+n5p = zeros(size(n5_ef, 1), size(n5_ef, 2)); n5p(6,:) = n5_ef(6,:);
+n11p = zeros(size(n11_ef, 1), size(n11_ef, 2)); n11p(6,:) = n11_ef(6,:);
+
+for i = 1:5
+    switch i
+        case 1
+            var = n1_ef;
+        case 2
+            var = n2_ef;
+        case 3
+            var = n3_ef;   
+        case 4
+            var = n5_ef; 
+        case 5
+            var = n11_ef;   
+    end
+    
+    var_p = zeros(size(var, 1), size(var, 2));
+    for j = setdiff(1:9, [4,6,8]) % process eeg & ecg signals
+        var_p(j,:) = process_signals(var(j,:), high_sf512,...
+            low_sf512, notch_sf512);
+    end  
+    
+    for j = [4,8] % process other signals
+        var_p(j,:) = process_signals(var(j,:), high_emg_sf512, ...
+            low_sf512, notch_sf256);
+    end
+    
+    switch i
+        case 1
+            n1p = var_p;
+        case 2
+            n2p = var_p;
+        case 3
+            n3p = var_p;
+        case 4
+            n5p = var_p;
+        case 5
+            n11p = var_p;
+    end
+    
+end
+
+clear n1_ef n2_ef n3_ef n5_ef n11_ef
+
+%% Save
+
+save('./data/filtered_signals/n1p.mat', 'n1p', '-v7.3');
+save('./data/filtered_signals/n2p.mat', 'n2p', '-v7.3');
+save('./data/filtered_signals/n3p.mat', 'n3p', '-v7.3');
+save('./data/filtered_signals/n5p.mat', 'n5p', '-v7.3');
+save('./data/filtered_signals/n11p.mat', 'n11p', '-v7.3');
+
 %% Segment signals and save (SKIP TO SAVE DISK SPACE)
+segmentedsignals_ICAfilt=cell(5,9);
+
+%% 24 Segment signals and save (SKIP TO SAVE DISK SPACE)
 segmentedsignals=cell(5,9);
+>>>>>>> 58b1f4618e2a03a620458dd579b1c7b334f55cc2
 samplingfrequencies=512.*ones(5,9);
-names={'n1_ef','n2_ef','n3_ef','n5_ef','n11_ef'}; % names of variables we are segmenting in 30s epochs
+names={'n1p','n2p','n3p','n5p','n11p'}; % names of variables we are segmenting in 30s epochs
 for i=1:length(names)
     patient=eval(names{i});
     for j=1:9
-    segmentedsignals{i,j}=segmentsignal(patient(j,:),samplingfrequencies(i,j));
+        segmentedsignals_ICAfilt{i,j}=segmentsignal(patient(j,:),samplingfrequencies(i,j));
     end
 end
 clear i j patient names
 
 % Synchronize with stages txt files
 for i=1:9
-    segmentedsignals{1,i}=segmentedsignals{1,i}(8:end-6,:);
-    segmentedsignals{2,i}=segmentedsignals{2,i}(3:end,:);
-    segmentedsignals{3,i}=segmentedsignals{3,i}(375:end-97,:);
-    segmentedsignals{4,i}=segmentedsignals{4,i}(102:end-2,:);
-    segmentedsignals{5,i}=segmentedsignals{5,i}(41:end-2,:);
+    segmentedsignals_ICAfilt{1,i}=segmentedsignals_ICAfilt{1,i}(8:end-6,:);
+    segmentedsignals_ICAfilt{2,i}=segmentedsignals_ICAfilt{2,i}(3:end,:);
+    segmentedsignals_ICAfilt{3,i}=segmentedsignals_ICAfilt{3,i}(375:end-97,:);
+    segmentedsignals_ICAfilt{4,i}=segmentedsignals_ICAfilt{4,i}(102:end-2,:);
+    segmentedsignals_ICAfilt{5,i}=segmentedsignals_ICAfilt{5,i}(41:end-2,:);
 end
-%%
-save('./Selected_dataset/segmentedsignals.mat', 'segmentedsignals', '-v7.3');
+
+save('./Selected_dataset/segmentedsignals_ICAfilt.mat', 'segmentedsignals_ICAfilt', '-v7.3');
 disp("segmentedsignals saved")
-%% Read txt (SKIP)
+
+%% 25 Read txt (SKIP)
 % turn txts into column vector
 sleepstages=cell(5,1);
 for i=1:length(FileNames_txt)
@@ -353,14 +429,23 @@ clear i ss
 save('./Selected_dataset/sleepstages.mat', 'sleepstages', '-v7.3');
 disp("sleepstages saved")
 
-%% Load segmented signals and sleepstages
-
+%% 26 Load segmented signals and sleepstages
 load('./Selected_dataset/segmentedsignals.mat');disp("segmentedsignals loaded")
 load('./Selected_dataset/sleepstages.mat');disp("sleepstages loaded")
 
-
 %% Test on last patient
+
+[P5features,P5stages]=dofeaturematrix(segmentedsignals_raw(5,:),sleepstages(5),samplingfrequencies);
+
+%% 27 Do feature matrix
+segsig=segmentedsignals(1:4,:);
+groundtruth=sleepstages(1:4);
+[features,stages]=dofeaturematrix(segsig,groundtruth,samplingfrequencies);
+
+
+%% 28 Test on last patient
 [P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
+
 stagesfit=trainedModel.predictFcn(P5features); %prediction of stages
 n=0;
 for i=1:length(P5stages)
