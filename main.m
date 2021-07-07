@@ -139,7 +139,7 @@ for i=1:9
     segmentedsignals{5,i}=segmentedsignals{5,i}(41:end-2,:);
 end
 
-clear i names patient samplingfrequencies
+clear i names patient %samplingfrequencies
 
 
 %% 8. Read txt (ground truths)
