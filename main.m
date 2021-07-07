@@ -163,8 +163,8 @@ save('./data/ground_truth/sleepstages.mat', 'sleepstages', '-v7.3');
 disp("sleepstages saved")
 
 %% 9.B Load segmented signals and sleepstages
-load('./Selected_dataset/segmentedsignals.mat');disp("segmentedsignals loaded")
-load('./Selected_dataset/sleepstages.mat');disp("sleepstages loaded")
+load('./data/segmented_signals/segmentedsignals.mat');disp("segmentedsignals loaded")
+load('./data/ground_truth/sleepstages.mat');disp("sleepstages loaded")
 
 %% 10. Getting time arrays of the original signals
 
