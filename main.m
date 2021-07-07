@@ -241,6 +241,72 @@ load('./data/resampled_signals/n3_.mat');disp("n3 loaded")
 load('./data/resampled_signals/n5_.mat');disp("n5 loaded")
 load('./data/resampled_signals/n11_.mat');disp("n11 loaded")
 
+%% Filtering resampled signals without using ICA
+load("./Filters/high_sf512.mat");
+load("./Filters/low_sf512.mat");
+load("./Filters/notch_sf512.mat");
+
+n1p_noICA = zeros(size(n1_, 1), size(n1_, 2)); n1p_noICA(6,:) = n1_(6,:);
+n2p_noICA = zeros(size(n2_, 1), size(n2_, 2)); n2p_noICA(6,:) = n2_(6,:);
+n3p_noICA = zeros(size(n3_, 1), size(n3_, 2)); n3p_noICA(6,:) = n3_(6,:);
+n5p_noICA = zeros(size(n5_, 1), size(n5_, 2)); n5p_noICA(6,:) = n5_(6,:);
+n11p_noICA = zeros(size(n11_, 1), size(n11_, 2)); n11p_noICA(6,:) = n11_(6,:);
+
+for i = 1:5
+    switch i
+        case 1
+            var = n1_;
+        case 2
+            var = n2_;
+        case 3
+            var = n3_;   
+        case 4
+            var = n5_; 
+        case 5
+            var = n11_;   
+    end
+    
+    var_p = zeros(size(var, 1), size(var, 2));
+    for j = setdiff(1:9, [4,6,8]) % process eeg & ecg signals
+        var_p(j,:) = process_signals(var(j,:), high_sf512,...
+            low_sf512, notch_sf512);
+    end  
+    
+    for j = [4,8] % process other signals
+        var_p(j,:) = process_signals(var(j,:), high_emg_sf512, ...
+            low_sf512, notch_sf256);
+    end
+    
+    switch i
+        case 1
+            n1p_noICA = var_p;
+        case 2
+            n2p_noICA = var_p;
+        case 3
+            n3p_noICA = var_p;
+        case 4
+            n5p_noICA = var_p;
+        case 5
+            n11p_noICA = var_p;
+    end
+    
+end
+
+% Save
+
+save('./data/filtered_signals_noICA/n1p_noICA.mat', 'n1p_noICA', '-v7.3');
+save('./data/filtered_signals_noICA/n2p_noICA.mat', 'n2p_noICA', '-v7.3');
+save('./data/filtered_signals_noICA/n3p_noICA.mat', 'n3p_noICA', '-v7.3');
+save('./data/filtered_signals_noICA/n5p_noICA.mat', 'n5p_noICA', '-v7.3');
+save('./data/filtered_signals_noICA/n11p_noICA.mat', 'n11p_noICA', '-v7.3');
+
+%% Load
+load('./data/filtered_signals_noICA/n1p_noICA.mat', 'n1p_noICA');
+load('./data/filtered_signals_noICA/n2p_noICA.mat', 'n2p_noICA');
+load('./data/filtered_signals_noICA/n3p_noICA.mat', 'n3p_noICA');
+load('./data/filtered_signals_noICA/n5p_noICA.mat', 'n5p_noICA');
+load('./data/filtered_signals_noICA/n11p_noICA.mat', 'n11p_noICA');
+
 %% 16. Performing z-score normalization followed by ICA
 
 mu_data = zeros(5, 9);
@@ -389,6 +455,13 @@ save('./data/filtered_signals/n3p.mat', 'n3p', '-v7.3');
 save('./data/filtered_signals/n5p.mat', 'n5p', '-v7.3');
 save('./data/filtered_signals/n11p.mat', 'n11p', '-v7.3');
 
+%% Load
+load('./data/filtered_signals/n1p.mat', 'n1p');
+load('./data/filtered_signals/n2p.mat', 'n2p');
+load('./data/filtered_signals/n3p.mat', 'n3p');
+load('./data/filtered_signals/n5p.mat', 'n5p');
+load('./data/filtered_signals/n11p.mat', 'n11p');
+
 %% Segment signals and save (SKIP TO SAVE DISK SPACE)
 segmentedsignals_ICAfilt=cell(5,9);
 
@@ -413,7 +486,7 @@ for i=1:9
     segmentedsignals_ICAfilt{5,i}=segmentedsignals_ICAfilt{5,i}(41:end-2,:);
 end
 
-save('./Selected_dataset/segmentedsignals_ICAfilt.mat', 'segmentedsignals_ICAfilt', '-v7.3');
+save('./data/segmented_signals/segmentedsignals_ICAfilt.mat', 'segmentedsignals_ICAfilt', '-v7.3');
 disp("segmentedsignals saved")
 
 %% 25 Read txt (SKIP)
@@ -436,7 +509,6 @@ load('./Selected_dataset/sleepstages.mat');disp("sleepstages loaded")
 %% Test on last patient
 
 [P5features,P5stages]=dofeaturematrix(segmentedsignals_raw(5,:),sleepstages(5),samplingfrequencies);
-
 
 %% 27 Do feature matrix
 segsig=segmentedsignals(1:4,:);
