@@ -3,7 +3,7 @@
 clear
 close all
 warning('off','all')
-%% 1. Retreiving raw data dirs and filenames, and getting channels and headers
+%% 1. Retreiving raw data dirs and filenames, getting channels and headers
 % EDF files: raw data
 % TXT files: annotated sleep stages
 
