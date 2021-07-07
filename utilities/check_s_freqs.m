@@ -24,7 +24,7 @@ end
 
 max_sfs = max(sfds);
 
-disp("The sampling frequencies for all common signal types in each signal are:");
+disp("The sampling frequencies for all common signal types in each signal are:" + newline);
 T = array2table([sfds; max_sfs],'VariableNames',common_labs,'RowName',{'n1', 'n2', 'n3', 'n5', 'n11', 'max sf'}); 
 disp(T) 
 

@@ -15,6 +15,4 @@ common_transducers = convertCharsToStrings(signal_header{j,1}.transducer);
 
 common_transducers = common_transducers(1, ib(:, 1));
 
-disp(sum(count(common_transducers, "EEG")));
-
 end

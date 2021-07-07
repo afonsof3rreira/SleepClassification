@@ -51,7 +51,7 @@ end
 
 total_count = str2double([eeg_count; nrep_other_transds_count(1, :)'])';
 
-disp("The number of signals found for all transducer types is:");
+disp("The number of signals found for all transducer types is:" + newline);
 T = array2table(total_count,'VariableNames',all_transducers,'RowName',{'Count'}); 
 disp(T) 
 
