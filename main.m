@@ -318,11 +318,11 @@ load('./data/resampled_signals/EOG_filt/n11_ef.mat');
 %% 21. Comparing denormalized EOG-filtered EEGs with Raw signals
 plot_1v1_EOG_artefact(n1_, n1_ef, time_vec, find(time_vec==20), "n1", selection_info);
 
-%% Clear signals so save space
+%% 22 Clear signals so save space
 
 clear n1_ n1_n n2_ n2_n n3_ n3_n n5_ n5_n n11_ n11_n fastica_result_n1 fastica_result_n2 fastica_result_n3 fastica_result_n5 fastica_result_n11
 
-%% Filter signals
+%% 23 Filter signals
 load("./Filters/high_sf512.mat");
 load("./Filters/high_sf128.mat");
 load("./Filters/high_emg_sf256.mat");
@@ -390,7 +390,7 @@ end
 
 clear n1_ef n2_ef n3_ef n5_ef n11_ef
 
-%% Segment signals and save (SKIP TO SAVE DISK SPACE)
+%% 24 Segment signals and save (SKIP TO SAVE DISK SPACE)
 segmentedsignals=cell(5,9);
 samplingfrequencies=512.*ones(5,9);
 names={'n1p','n2p','n3p','n5p','n11p'}; % names of variables we are segmenting in 30s epochs
@@ -413,7 +413,7 @@ end
 %%
 save('./Selected_dataset/segmentedsignals.mat', 'segmentedsignals', '-v7.3');
 disp("segmentedsignals saved")
-%% Read txt (SKIP)
+%% 25 Read txt (SKIP)
 % turn txts into column vector
 sleepstages=cell(5,1);
 for i=1:length(FileNames_txt)
@@ -425,11 +425,17 @@ clear i ss
 save('./Selected_dataset/sleepstages.mat', 'sleepstages', '-v7.3');
 disp("sleepstages saved")
 
-%% Load segmented signals and sleepstages
+%% 26 Load segmented signals and sleepstages
 load('./Selected_dataset/segmentedsignals.mat');disp("segmentedsignals loaded")
 load('./Selected_dataset/sleepstages.mat');disp("sleepstages loaded")
 
-%% Test on last patient
+%% 27 Do feature matrix
+segsig=segmentedsignals(1:4,:);
+groundtruth=sleepstages(1:4);
+[features,stages]=dofeaturematrix(segsig,groundtruth,samplingfrequencies);
+
+
+%% 28 Test on last patient
 [P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
 stagesfit=trainedModel.predictFcn(P5features); %prediction of stages
 n=0;
