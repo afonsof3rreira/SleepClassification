@@ -139,7 +139,7 @@ for i=1:9
     segmentedsignals{5,i}=segmentedsignals{5,i}(41:end-2,:);
 end
 
-clear i names patient
+clear i names patient samplingfrequencies
 
 
 %% 8. Read txt (ground truths)
@@ -151,6 +151,8 @@ for i=1:length(FileNames_txt)
     disp(i+"/"+length(FileNames_txt)+" done")
 end
 clear i ss
+
+
 
 %% 9.A Save segmented signals and sleepstages
 
@@ -178,8 +180,6 @@ plot_signals([n1, n2, n3, n5, n11], time_mat, ["n1", "n2", "n3", "n5", "n11"], s
 max_sfs = check_s_freqs(ib, signal_header);
 
 %% 13. Upsampling signals to the maximum signals of each type
-mu_data = zeros(5, 9);
-mean_data = zeros(5, 9);
 
 disp("n1...");
 n1_ = upsample_signals(n1, signal_header{1, 1}, ib(1, :), max_sfs, time_mat{1, 1});
@@ -318,8 +318,44 @@ load('./data/resampled_signals/EOG_filt/n11_ef.mat');
 %% 21. Comparing denormalized EOG-filtered EEGs with Raw signals
 plot_1v1_EOG_artefact(n1_, n1_ef, time_vec, find(time_vec==20), "n1", selection_info);
 
-%% ... classification
+%% Segment signals and save (SKIP TO SAVE DISK SPACE)
+segmentedsignals=cell(5,9);
 samplingfrequencies=512.*ones(5,9);
+names={'n1_ef','n2_ef','n3_ef','n5_ef','n11_ef'}; % names of variables we are segmenting in 30s epochs
+for i=1:length(names)
+    patient=eval(names{i});
+    for j=1:9
+    segmentedsignals{i,j}=segmentsignal(patient(j,:),samplingfrequencies(i,j));
+    end
+end
+clear i j patient names
+
+% Synchronize with stages txt files
+for i=1:9
+    segmentedsignals{1,i}=segmentedsignals{1,i}(8:end-6,:);
+    segmentedsignals{2,i}=segmentedsignals{2,i}(3:end,:);
+    segmentedsignals{3,i}=segmentedsignals{3,i}(375:end-97,:);
+    segmentedsignals{4,i}=segmentedsignals{4,i}(102:end-2,:);
+    segmentedsignals{5,i}=segmentedsignals{5,i}(41:end-2,:);
+end
+%%
+save('./Selected_dataset/segmentedsignals.mat', 'segmentedsignals', '-v7.3');
+disp("segmentedsignals saved")
+%% Read txt (SKIP)
+% turn txts into column vector
+sleepstages=cell(5,1);
+for i=1:length(FileNames_txt)
+    ss = txt_to_stages(FileNames_txt{i});
+    sleepstages{i,1} = ss;
+    disp(i+"/"+length(FileNames_txt)+" done")
+end
+clear i ss
+save('./Selected_dataset/sleepstages.mat', 'sleepstages', '-v7.3');
+disp("sleepstages saved")
+
+%% Load segmented signals and sleepstages
+load('./Selected_dataset/segmentedsignals.mat');disp("segmentedsignals loaded")
+load('./Selected_dataset/sleepstages.mat');disp("sleepstages loaded")
 
 %% Test on last patient
 [P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
@@ -330,6 +366,7 @@ for i=1:length(P5stages)
         n=n+1;
     end
 end
+
 display("The algorith has an accuracy of " + n/length(P5stages)*100 +"%")
 figure(4)
 plot(stagesfit);hold on

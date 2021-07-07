@@ -30,7 +30,7 @@ j=1;
             elseif T{i,1}=="S4"
                 sleepstages(j)=1; j=j+1;
             elseif T{i,1}=="R"
-                sleepstages(j)=6;j=j+1;
+                sleepstages(j)=0;j=j+1;
             end
         end
     end
