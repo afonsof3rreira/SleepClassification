@@ -354,8 +354,10 @@ save('./Selected_dataset/sleepstages.mat', 'sleepstages', '-v7.3');
 disp("sleepstages saved")
 
 %% Load segmented signals and sleepstages
+
 load('./Selected_dataset/segmentedsignals.mat');disp("segmentedsignals loaded")
 load('./Selected_dataset/sleepstages.mat');disp("sleepstages loaded")
+
 
 %% Test on last patient
 [P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
