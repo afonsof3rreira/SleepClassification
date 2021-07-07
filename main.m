@@ -139,7 +139,7 @@ for i=1:9
     segmentedsignals{5,i}=segmentedsignals{5,i}(41:end-2,:);
 end
 
-clear i names patient samplingfrequencies
+clear i names patient
 
 
 %% 8. Read txt (ground truths)
@@ -151,8 +151,6 @@ for i=1:length(FileNames_txt)
     disp(i+"/"+length(FileNames_txt)+" done")
 end
 clear i ss
-
-
 
 %% 9.A Save segmented signals and sleepstages
 
@@ -319,3 +317,28 @@ load('./data/resampled_signals/EOG_filt/n11_ef.mat');
 
 %% 21. Comparing denormalized EOG-filtered EEGs with Raw signals
 plot_1v1_EOG_artefact(n1_, n1_ef, time_vec, find(time_vec==20), "n1", selection_info);
+
+%% ... classification
+samplingfrequencies=512.*ones(5,9);
+
+%% Test on last patient
+[P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
+stagesfit=trainedModel.predictFcn(P5features); %prediction of stages
+n=0;
+for i=1:length(P5stages)
+    if P5stages(i)==stagesfit(i)
+        n=n+1;
+    end
+end
+display("The algorith has an accuracy of " + n/length(P5stages)*100 +"%")
+figure(4)
+plot(stagesfit);hold on
+plot(P5stages); hold off
+title("Hypnogram real vs ML")
+legend({'real','ML'},'Location','southeast')
+ylim([0 5])
+xlim([0 length(P5stages)])
+xlabel("Epoch Number")
+ylabel("Sleep Stages")
+set(gca,'ytick',[0:6],'yticklabel',{'REM','','N3','N2','N1','Wake',''});
+
