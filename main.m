@@ -233,12 +233,12 @@ disp("n11 saved")
 
 load('./data/raw_data/mat_files/signal_header.mat');disp("signal header loaded")
 load('./data/raw_data/mat_files/selection_info.mat');disp("signal info loaded")
-load('./Resampled_dataset/time_vec.mat');disp("time vector loaded")
-load('./data/resampled_signals/n1.mat');disp("n1 loaded")
-load('./data/resampled_signals/n2.mat');disp("n2 loaded")
-load('./data/resampled_signals/n3.mat');disp("n3 loaded")
-load('./data/resampled_signals/n5.mat');disp("n5 loaded")
-load('./data/resampled_signals/n11.mat');disp("n11 loaded")
+load('./data/resampled_signals/time_vec.mat');disp("time vector loaded")
+load('./data/resampled_signals/n1_.mat');disp("n1 loaded")
+load('./data/resampled_signals/n2_.mat');disp("n2 loaded")
+load('./data/resampled_signals/n3_.mat');disp("n3 loaded")
+load('./data/resampled_signals/n5_.mat');disp("n5 loaded")
+load('./data/resampled_signals/n11_.mat');disp("n11 loaded")
 
 %% 16. Performing z-score normalization followed by ICA
 
@@ -261,8 +261,8 @@ save('./data/resampled_signals/ICA_components/fastica_result_n5.mat', 'fastica_r
 save('./data/resampled_signals/ICA_components/fastica_result_n11.mat', 'fastica_result_n11', '-v7.3');
 
 % mean and StD. of original data, needed for denormalization
-save('./data/resampled_signals/mu_data.mat', 'mu_data', '-v7.3');
-save('./data/resampled_signals/mean_data.mat', 'mean_data', '-v7.3');
+save('./data/resampled_signals/ICA_components/mu_data.mat', 'mu_data', '-v7.3');
+save('./data/resampled_signals/ICA_componentsmean_data.mat', 'mean_data', '-v7.3');
 
 %% 17.B loading ICA results - fastICA results: LOAD TO KEEP DATA CONSISTENT
 
@@ -285,10 +285,10 @@ eog_inds = [5, 5, 7, 4, 7];
 reset_s = [3, 4, 6, 8, 9];
 
 xx_1_n1 = EOG_ICA_removal(fastica_result_n1, n1_n, eog_inds, reset_s, 1);
-xx_1_n2 = EOG_ICA_removal(fastica_result_n1, n2_n, eog_inds, reset_s, 2);
-xx_1_n3 = EOG_ICA_removal(fastica_result_n1, n3_n, eog_inds, reset_s, 3);
-xx_1_n5 = EOG_ICA_removal(fastica_result_n1, n5_n, eog_inds, reset_s, 4);
-xx_1_n11 = EOG_ICA_removal(fastica_result_n1, n11_n, eog_inds, reset_s, 5);
+xx_1_n2 = EOG_ICA_removal(fastica_result_n2, n2_n, eog_inds, reset_s, 2);
+xx_1_n3 = EOG_ICA_removal(fastica_result_n3, n3_n, eog_inds, reset_s, 3);
+xx_1_n5 = EOG_ICA_removal(fastica_result_n5, n5_n, eog_inds, reset_s, 4);
+xx_1_n11 = EOG_ICA_removal(fastica_result_n11, n11_n, eog_inds, reset_s, 5);
 
 %% 19. Denormalizing data
 
@@ -317,6 +317,10 @@ load('./data/resampled_signals/EOG_filt/n11_ef.mat');
 
 %% 21. Comparing denormalized EOG-filtered EEGs with Raw signals
 plot_1v1_EOG_artefact(n1_, n1_ef, time_vec, find(time_vec==20), "n1", selection_info);
+
+%% Clear signals so save space
+
+clear n1_ n1_n n2_ n2_n n3_ n3_n n5_ n5_n n11_ n11_n fastica_result_n1 fastica_result_n2 fastica_result_n3 fastica_result_n5 fastica_result_n11
 
 %% Segment signals and save (SKIP TO SAVE DISK SPACE)
 segmentedsignals=cell(5,9);
