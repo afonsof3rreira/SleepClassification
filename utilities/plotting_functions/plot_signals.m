@@ -19,7 +19,7 @@ for i = 1:5
             time_cropped = find(time_vec==30);
         end
         signal = signal_arr(i, :);
-        plot(time_vec(1:time_cropped), signal(1, 1:time_cropped));
+        plot(time_vec(1:time_cropped), signal(j, 1:time_cropped));
 
         title(selection_info(1, j) + " " + num2str(1/time_vec(2)));
     end
