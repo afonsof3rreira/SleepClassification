@@ -322,10 +322,78 @@ plot_1v1_EOG_artefact(n1_, n1_ef, time_vec, find(time_vec==20), "n1", selection_
 
 clear n1_ n1_n n2_ n2_n n3_ n3_n n5_ n5_n n11_ n11_n fastica_result_n1 fastica_result_n2 fastica_result_n3 fastica_result_n5 fastica_result_n11
 
+%% Filter signals
+load("./Filters/high_sf512.mat");
+load("./Filters/high_sf128.mat");
+load("./Filters/high_emg_sf256.mat");
+load("./Filters/high_emg_sf128.mat");
+load("./Filters/low_sf512.mat");
+load("./Filters/notch_sf512.mat");
+load("./Filters/notch_sf256.mat");
+load("./Filters/notch_sf128.mat");
+
+n1p = zeros(size(n1_ef, 1), size(n1_ef, 2));
+n2p = zeros(size(n2_ef, 1), size(n2_ef, 2));
+n3p = zeros(size(n3_ef, 1), size(n3_ef, 2));
+n5p = zeros(size(n5_ef, 1), size(n5_ef, 2));
+n11p = zeros(size(n11_ef, 1), size(n11_ef, 2));
+
+for i = 1:5
+    switch i
+        case 1
+            var = n1_ef;
+        case 2
+            var = n2_ef;
+        case 3
+            var = n3_ef;   
+        case 4
+            var = n5_ef; 
+        case 5
+            var = n11_ef;   
+    end
+    
+    var_p = zeros(size(var, 1), size(var, 2));
+    for j = setdiff(1:8, [4,6]) % process eeg & ecg signals
+        var_p(j,:) = process_signals(var(j,:), high_sf512,...
+            low_sf512, notch_sf512);
+    end  
+    
+    for j = [4,8,9] % process other signals
+        if samplingfrequencies(i,j) == 256 %j==4,9 (emg)
+            var_p(j,:) = process_signals_nolow(var(j,:), high_emg_sf256, ...
+            notch_sf256);
+        elseif samplingfrequencies(i,j) == 128 %j==8,9
+            if j==9 %emg
+                var_p(j,:) = process_signals_nolow(var(j,:), high_emg_sf128, ...
+                notch_sf128);
+            elseif j==8 %eog
+                var_p(j,:) = process_signals_nolow(var(j,:), high_sf128, ...
+                notch_sf128);
+            end
+        end
+    end
+    
+    switch i
+        case 1
+            n1p = var_p;
+        case 2
+            n2p = var_p;
+        case 3
+            n3p = var_p;
+        case 4
+            n5p = var_p;
+        case 5
+            n11p = var_p;
+    end
+    
+end
+
+clear n1_ef n2_ef n3_ef n5_ef n11_ef
+
 %% Segment signals and save (SKIP TO SAVE DISK SPACE)
 segmentedsignals=cell(5,9);
 samplingfrequencies=512.*ones(5,9);
-names={'n1_ef','n2_ef','n3_ef','n5_ef','n11_ef'}; % names of variables we are segmenting in 30s epochs
+names={'n1p','n2p','n3p','n5p','n11p'}; % names of variables we are segmenting in 30s epochs
 for i=1:length(names)
     patient=eval(names{i});
     for j=1:9
