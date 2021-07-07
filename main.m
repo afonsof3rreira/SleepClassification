@@ -394,7 +394,6 @@ segmentedsignals_ICAfilt=cell(5,9);
 
 %% 24 Segment signals and save (SKIP TO SAVE DISK SPACE)
 segmentedsignals=cell(5,9);
->>>>>>> 58b1f4618e2a03a620458dd579b1c7b334f55cc2
 samplingfrequencies=512.*ones(5,9);
 names={'n1p','n2p','n3p','n5p','n11p'}; % names of variables we are segmenting in 30s epochs
 for i=1:length(names)
@@ -418,6 +417,7 @@ save('./Selected_dataset/segmentedsignals_ICAfilt.mat', 'segmentedsignals_ICAfil
 disp("segmentedsignals saved")
 
 %% 25 Read txt (SKIP)
+
 % turn txts into column vector
 sleepstages=cell(5,1);
 for i=1:length(FileNames_txt)
@@ -436,6 +436,7 @@ load('./Selected_dataset/sleepstages.mat');disp("sleepstages loaded")
 %% Test on last patient
 
 [P5features,P5stages]=dofeaturematrix(segmentedsignals_raw(5,:),sleepstages(5),samplingfrequencies);
+
 
 %% 27 Do feature matrix
 segsig=segmentedsignals(1:4,:);
