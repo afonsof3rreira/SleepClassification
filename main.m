@@ -576,6 +576,7 @@ load('./data/feature_matrix/features_noICA.mat', 'features_noICA');
 load('./data/feature_matrix/features_raw.mat', 'features_raw');
 load('./data/feature_matrix/stages.mat', 'stages');
 
+<<<<<<< HEAD
 %% Features for last patient
 [P5features_raw,P5stages]=dofeaturematrix(segmentedsignals_raw(5,:),sleepstages(5),samplingfrequencies);
 [P5features_ICAfilt,~]=dofeaturematrix(segmentedsignals_ICAfilt(5,:),sleepstages(5),samplingfrequencies);
@@ -586,6 +587,9 @@ save('./data/feature_matrix/P5features_raw.mat', 'P5features_raw', '-v7.3');
 save('./data/feature_matrix/P5features_ICAfilt.mat', 'P5features_raw', '-v7.3');
 save('./data/feature_matrix/P5features_noICA.mat', 'P5features_noICA', '-v7.3');
 save('./data/feature_matrix/P5stages.mat', 'P5stages', '-v7.3');
+=======
+
+>>>>>>> f3dc600d6a046a4e9d68afcac152967f773dae89
 
 %% 28 Test on last patient
 stagesfit=trainedModel_ICAfilt.predictFcn(P5features_ICAfilt); %prediction of stages
