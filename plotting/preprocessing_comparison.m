@@ -4,7 +4,7 @@
 % While in the main script plots were used to confirm the desired outputs,
 % here we plot the signals aesthetically.
 
-%% loading signals
+%% 1. loading signals
 % Change variables names to be loaded
 
 signal_ind = input('Input the patient number from 1 to 5: ');
@@ -49,7 +49,7 @@ end
 
 clear signal_raw_path signal_ICA_path signal_filt_path
 
-%% Plotting
+%% 2. Prompting the user
 % Prompts -----------------------------------------------------------------
 st_ind = input("Input the signal type as a number from 1 to 9: ");
 disp(newline + "Input the following time axis params for plotting:");
@@ -60,7 +60,7 @@ ib = find(signal_header{signal_ind, 1}.label == selection_info(1, st_ind));
 %
 unit = replace(signal_header{signal_ind, 1}.units{1, ib}, 'u', '$\mu$');
 
-%%
+%% 3. Plotting
 
 ts = time_vec(1, 2);
 
