@@ -576,7 +576,9 @@ load('./data/feature_matrix/features_noICA.mat', 'features_noICA');
 load('./data/feature_matrix/features_raw.mat', 'features_raw');
 load('./data/feature_matrix/stages.mat', 'stages');
 
-%% 28 Test on last patient
+%% 28 Train in the classification lerner app
+
+%% 29 Test on last patient
 [P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
 save('./data/feature_matrix/P5features.mat', 'P5features', '-v7.3');
 save('./data/feature_matrix/P5features.mat', 'P5stages', '-v7.3');
