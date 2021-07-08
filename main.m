@@ -548,43 +548,35 @@ groundtruth=sleepstages(1:4);
 
 % Raw signals
 segsig=segmentedsignals_raw(1:4,:);
-[features_raw,stages_raw]=dofeaturematrix(segsig,groundtruth,samplingfrequencies);
+[features_raw,stages]=dofeaturematrix(segsig,groundtruth,samplingfrequencies);
 disp("Feature matrix using raw signals done.");
 
 % Only ICA
 segsig=segmentedsignals_ICA(1:4,:);
-[features_ICA,stages_ICA]=dofeaturematrix(segsig,groundtruth,samplingfrequencies);
+[features_ICA,stages]=dofeaturematrix(segsig,groundtruth,samplingfrequencies);
 disp("Feature matrix using only ICA done.");
 
 % Only filters
 segsig=segmentedsignals_noICA(1:4,:);
-[features_noICA,stages_noICA]=dofeaturematrix(segsig,groundtruth,samplingfrequencies);
+[features_noICA,stages]=dofeaturematrix(segsig,groundtruth,samplingfrequencies);
 disp("Feature matrix using only filters done.");
 
 % Filters + ICA
 segsig=segmentedsignals_ICAfilt(1:4,:);
-[features_ICAfilt,stages_ICAfilt]=dofeaturematrix(segsig,groundtruth,samplingfrequencies);
+[features_ICAfilt,stages]=dofeaturematrix(segsig,groundtruth,samplingfrequencies);
 disp("Feature matrix using ICA and filters done.");
 
 %% Save
 save('./data/feature_matrix/features_ICAfilt.mat', 'features_ICAfilt', '-v7.3');
-save('./data/feature_matrix/stages_ICAfilt.mat', 'stages_ICAfilt', '-v7.3');
-
 save('./data/feature_matrix/features_noICA.mat', 'features_noICA', '-v7.3');
-save('./data/feature_matrix/stages_noICA.mat', 'stages_noICA', '-v7.3');
-
 save('./data/feature_matrix/features_raw.mat', 'features_raw', '-v7.3');
-save('./data/feature_matrix/stages_raw.mat', 'stages_raw', '-v7.3');
+save('./data/feature_matrix/stages.mat', 'stages', '-v7.3');
 
 %% Load
 load('./data/feature_matrix/features_ICAfilt.mat', 'features_ICAfilt');
-load('./data/feature_matrix/stages_ICAfilt.mat', 'stages_ICAfilt');
-
 load('./data/feature_matrix/features_noICA.mat', 'features_noICA');
-load('./data/feature_matrix/stages_noICA.mat', 'stages_noICA');
-
 load('./data/feature_matrix/features_raw.mat', 'features_raw');
-load('./data/feature_matrix/stages_raw.mat', 'stages_raw');
+load('./data/feature_matrix/stages.mat', 'stages_raw');
 
 %% 28 Test on last patient
 [P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
