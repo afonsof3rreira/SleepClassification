@@ -576,7 +576,7 @@ save('./data/feature_matrix/stages.mat', 'stages', '-v7.3');
 load('./data/feature_matrix/features_ICAfilt.mat', 'features_ICAfilt');
 load('./data/feature_matrix/features_noICA.mat', 'features_noICA');
 load('./data/feature_matrix/features_raw.mat', 'features_raw');
-load('./data/feature_matrix/stages.mat', 'stages_raw');
+load('./data/feature_matrix/stages.mat', 'stages');
 
 %% 28 Test on last patient
 [P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
