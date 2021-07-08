@@ -614,11 +614,14 @@ save('./data/feature_matrix/P5features_ICAfilt.mat', 'P5features_raw', '-v7.3');
 save('./data/feature_matrix/P5features_noICA.mat', 'P5features_noICA', '-v7.3');
 save('./data/feature_matrix/P5features_ICA.mat', 'P5features_ICA', '-v7.3');
 save('./data/feature_matrix/P5stages.mat', 'P5stages', '-v7.3');
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ceb73b9933bf85bb4dcd5b0eaec24e640a2f472a
 
 %% 29 Test on last patient
 [P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
 save('./data/feature_matrix/P5features.mat', 'P5features', '-v7.3');
-save('./data/feature_matrix/P5features.mat', 'P5stages', '-v7.3');
 %%
 load('./data/feature_matrix/features_P5.mat', 'P5features');
 load('./data/feature_matrix/features_P5.mat', 'P5stages');
