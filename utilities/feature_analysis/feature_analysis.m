@@ -1,6 +1,15 @@
+%% Confusion matrix
+figure(1)
+cm = confusionchart(P5stages,stagesfit_ICAfilt,...
+    'Title','Confusion Matrix for model using ICA and filters');
+
+%%
+figure(2);confusionchart(P5stages,stagesfit_noICA); title('Filters');
+figure(3);confusionchart(P5stages,stagesfit_ICA); title('ICA');
+figure(4);confusionchart(P5stages,stagesfit_raw); title('raw');
+
 %% ICA + filters
 stagesfit_ICAfilt = trainedModel_ICAfilt.predictFcn(P5features_ICAfilt);
-figure();confusionchart(P5stages,stagesfit_ICAfilt)
 
 %% Box plots
 figure ()
@@ -92,7 +101,86 @@ boxplot(P5features_ICAfilt(:,56),stagesfit_ICAfilt); title('std hrv');%varia um 
 figure (4)
 boxplot(P5features_ICAfilt(:,57),stagesfit_ICAfilt); title('dif maxmin hrv');%bom para separa a 1 e 5 do resto
 
-%% Analysis
+%% Only filters
+stagesfit_noICA = trainedModel_ICAfilt.predictFcn(P5features_noICA);
+
+%% features do EEG1 (10 features por 4 EEG signals)
+figure (1)
+boxplot(P5features_noICA(:,1),stagesfit_noICA); title('alpha waves'); %todas as waves são boas para classificar
+figure (2)
+boxplot(P5features_noICA(:,2),stagesfit_noICA); title('beta waves');
+figure (3)
+boxplot(P5features_noICA(:,3),stagesfit_noICA); title('theta waves');
+figure (4)
+boxplot(P5features_noICA(:,4),stagesfit_noICA); title('delta waves'); 
+figure (5)
+boxplot(P5features_noICA(:,5),stagesfit_noICA); title('kurtosis'); % tendencialmente maior para stage 5 mas mesmo assim varia um bocado entre stages
+figure (6)
+boxplot(P5features_noICA(:,6),stagesfit_noICA); title('skewness'); %varia muito pouco entre stages
+figure (7)
+boxplot(P5features_noICA(:,7),stagesfit_noICA); title('pfd'); %nice
+figure (8)
+boxplot(P5features_noICA(:,8),stagesfit_noICA); title('hjorth activity'); % bom para stage 5
+figure (9)
+boxplot(P5features_noICA(:,9),stagesfit_noICA); title('hjorth mobility'); %nice
+figure (10)
+boxplot(P5features_noICA(:,10),stagesfit_noICA); title('hjorth complexity'); %nice
+figure (11)
+boxplot(P5features_noICA(:,11),stagesfit_noICA); title('k complexes'); %nice
+figure (12)
+boxplot(P5features_noICA(:,12),stagesfit_noICA); title('sleep spindles'); %nao é muito mau mas podia ser melhor (C4A1: sleep spindles)
+
+%% features do EEG2 (12 features por 4 EEG signals)
+figure (1)
+boxplot(P5features_noICA(:,13),stagesfit_noICA); title('alpha waves'); %todas as waves são boas para classificar
+figure (2)
+boxplot(P5features_noICA(:,14),stagesfit_noICA); title('beta waves');
+figure (3)
+boxplot(P5features_noICA(:,15),stagesfit_noICA); title('theta waves');
+figure (4)
+boxplot(P5features_noICA(:,16),stagesfit_noICA); title('delta waves'); 
+figure (5)
+boxplot(P5features_noICA(:,17),stagesfit_noICA); title('kurtosis'); % tendencialmente maior para stage 5 mas mesmo assim varia um bocado entre stages
+figure (6)
+boxplot(P5features_noICA(:,18),stagesfit_noICA); title('skewness'); %varia muito pouco entre stages
+figure (7)
+boxplot(P5features_noICA(:,19),stagesfit_noICA); title('pfd'); %nice
+figure (8)
+boxplot(P5features_noICA(:,20),stagesfit_noICA); title('hjorth activity'); % bom para stage 5
+figure (9)
+boxplot(P5features_noICA(:,21),stagesfit_noICA); title('hjorth mobility'); %nice
+figure (10)
+boxplot(P5features_noICA(:,22),stagesfit_noICA); title('hjorth complexity'); %nice
+figure (11)
+boxplot(P5features_noICA(:,23),stagesfit_noICA); title('k complexes'); % bnom para stage 5
+figure (12)
+boxplot(P5features_noICA(:,24),stagesfit_noICA); title('sleep spindles'); %pessimo
+
+%% features do EMG
+figure (1)
+boxplot(P5features_noICA(:,49),stagesfit_noICA); title('rms emg1');
+figure (2)
+boxplot(P5features_noICA(:,50),stagesfit_noICA); title('rms emg2');
+figure (3)
+boxplot(P5features_noICA(:,51),stagesfit_noICA); title('pp emg1');
+figure (4)
+boxplot(P5features_noICA(:,52),stagesfit_noICA); title('pp emg2');
+
+%% features do EOG
+figure (1)
+boxplot(P5features_noICA(:,53),stagesfit_noICA); title('#blinks'); % number of blinks (só tem valores diferentes de zeor na stage 5, o que faz sentido)
+
+%% features do ECG
+figure (1)
+boxplot(P5features_noICA(:,54),stagesfit_noICA); title('hr');%aumenta ligeiramente para awake e baixa para rem, mas os valores são semelhantes
+figure (2)
+boxplot(P5features_noICA(:,55),stagesfit_noICA); title('mean hrv');%parecido entre stages
+figure (3)
+boxplot(P5features_noICA(:,56),stagesfit_noICA); title('std hrv');%varia um pouco mas nao muito, pode ajudar
+figure (4)
+boxplot(P5features_noICA(:,57),stagesfit_noICA); title('dif maxmin hrv');%bom para separa a 1 e 5 do resto
+
+%% Analysis using ICA and filters
 % EEG features
 % In general, alpha, beta, theta and delta waves are good features to use
 % for classification, while skewness does not offer much information
