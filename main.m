@@ -614,15 +614,12 @@ save('./data/feature_matrix/P5features_ICAfilt.mat', 'P5features_raw', '-v7.3');
 save('./data/feature_matrix/P5features_noICA.mat', 'P5features_noICA', '-v7.3');
 save('./data/feature_matrix/P5features_ICA.mat', 'P5features_ICA', '-v7.3');
 save('./data/feature_matrix/P5stages.mat', 'P5stages', '-v7.3');
-<<<<<<< HEAD
-=======
-=======
+
 %% 28 Train in the classification lerner app
 save('./data/training_models/trainedModelICA.mat', 'trainedModelICA', '-v7.3');
 save('./data/training_models/trainedModelICAfilt.mat', 'trainedModelICAfilt', '-v7.3');
 save('./data/training_models/trainedModelnoICA.mat', 'trainedModelnoICA', '-v7.3');
 save('./data/training_models/trainedModelraw.mat', 'trainedModelraw', '-v7.3');
->>>>>>> ceb73b9933bf85bb4dcd5b0eaec24e640a2f472a
 
 %%
 load('./data/training_models/trainedModelICA.mat', 'trainedModelICA');
