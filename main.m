@@ -421,6 +421,30 @@ plot_1v1_EOG_artefact(n1_, n1_ef, time_vec, find(time_vec==20), "n1", selection_
 
 clear n1_ n1_n n2_ n2_n n3_ n3_n n5_ n5_n n11_ n11_n fastica_result_n1 fastica_result_n2 fastica_result_n3 fastica_result_n5 fastica_result_n11
 
+%% 24 Segment signals and save (SKIP TO SAVE DISK SPACE)
+segmentedsignals_ICA=cell(5,9);
+samplingfrequencies=512.*ones(5,9);
+names={'n1_ef','n2_ef','n3_ef','n5_ef','n11_ef'}; % names of variables we are segmenting in 30s epochs
+for i=1:length(names)
+    patient=eval(names{i});
+    for j=1:9
+        segmentedsignals_ICA{i,j}=segmentsignal(patient(j,:),samplingfrequencies(i,j));
+    end
+end
+clear i j patient names  
+
+% Synchronize with stages txt files
+for i=1:9
+    segmentedsignals_ICA{1,i}=segmentedsignals_ICA{1,i}(8:end-6,:);
+    segmentedsignals_ICA{2,i}=segmentedsignals_ICA{2,i}(3:end,:);
+    segmentedsignals_ICA{3,i}=segmentedsignals_ICA{3,i}(375:end-97,:);
+    segmentedsignals_ICA{4,i}=segmentedsignals_ICA{4,i}(102:end-2,:);
+    segmentedsignals_ICA{5,i}=segmentedsignals_ICA{5,i}(41:end-2,:);
+end
+
+save('./data/segmented_signals/segmentedsignals_ICA.mat', 'segmentedsignals_ICA', '-v7.3');
+disp("segmentedsignals saved")
+
 %% 23 Filter signals
 load("./Filters/high_sf512.mat");
 load("./Filters/high_sf128.mat");
@@ -578,19 +602,18 @@ load('./data/feature_matrix/features_noICA.mat', 'features_noICA');
 load('./data/feature_matrix/features_raw.mat', 'features_raw');
 load('./data/feature_matrix/stages.mat', 'stages');
 
-<<<<<<< HEAD
 %% Features for last patient
 [P5features_raw,P5stages]=dofeaturematrix(segmentedsignals_raw(5,:),sleepstages(5),samplingfrequencies);
 [P5features_ICAfilt,~]=dofeaturematrix(segmentedsignals_ICAfilt(5,:),sleepstages(5),samplingfrequencies);
 [P5features_noICA,~]=dofeaturematrix(segmentedsignals_noICA(5,:),sleepstages(5),samplingfrequencies);
+[P5features_ICA,~]=dofeaturematrix(segmentedsignals_ICA(5,:),sleepstages(5),samplingfrequencies);
 disp("Feature matrixes for patient 5 done.");
 
 save('./data/feature_matrix/P5features_raw.mat', 'P5features_raw', '-v7.3');
 save('./data/feature_matrix/P5features_ICAfilt.mat', 'P5features_raw', '-v7.3');
 save('./data/feature_matrix/P5features_noICA.mat', 'P5features_noICA', '-v7.3');
+save('./data/feature_matrix/P5features_ICA.mat', 'P5features_ICA', '-v7.3');
 save('./data/feature_matrix/P5stages.mat', 'P5stages', '-v7.3');
-=======
-%% 28 Train in the classification lerner app
 
 %% 29 Test on last patient
 [P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
@@ -599,24 +622,30 @@ save('./data/feature_matrix/P5features.mat', 'P5stages', '-v7.3');
 %%
 load('./data/feature_matrix/features_P5.mat', 'P5features');
 load('./data/feature_matrix/features_P5.mat', 'P5stages');
->>>>>>> f3dc600d6a046a4e9d68afcac152967f773dae89
+
+%% Load trained models
+load('./data/training_models/trainedModel_ICAfilt.mat');
+load('./data/training_models/trainedModel_ICA.mat');
+load('./data/training_models/trainedModel_noICA.mat');
+load('./data/training_models/trainedModel_raw.mat');
 
 %% 28 Test on last patient
-stagesfit=trainedModel_ICAfilt.predictFcn(P5features_ICAfilt); %prediction of stages
+% ICA + filters
+stagesfit_ICAfilt=trainedModel_ICAfilt.predictFcn(P5features_ICAfilt); %prediction of stages
 n=0;
 for i=1:length(P5stages)
-    if P5stages(i)==stagesfit(i)
+    if P5stages(i)==stagesfit_ICAfilt(i)
         n=n+1;
     end
 end
 
-acc = n/length(P5stages)*100;
+acc_ICAfilt = n/length(P5stages)*100;
 clear i n
 
-display("The algorithm has an accuracy of " + acc +"%")
+display("The algorithm has an accuracy of " + acc_ICAfilt +"%")
 
-figure(4)
-plot(stagesfit);hold on
+figure()
+plot(stagesfit_ICAfilt);hold on
 plot(P5stages); hold off
 title("Hypnogram real vs ML")
 legend({'real','ML'},'Location','southeast')
@@ -624,14 +653,94 @@ ylim([0 5])
 xlim([0 length(P5stages)])
 xlabel("Epoch Number")
 ylabel("Sleep Stages")
-set(gca,'ytick',[0:6],'yticklabel',{'REM','','N3','N2','N1','Wake',''});
+set(gca,'ytick',[0:5],'yticklabel',{'REM','N4','N3','N2','N1','Wake'});
 
-%% Obtain confusion charts using exported models
-% adapt names according to the variables
-stagesfit = trainedModel.predictFcn(P5features);
-confusionchart(P5stages,stagesfit)
+figure()
+confusionchart(P5stages,stagesfit_ICAfilt)
 
+% Only ICA
+stagesfit_ICA=trainedModel_ICA.predictFcn(P5features_ICA); %prediction of stages
+n=0;
+for i=1:length(P5stages)
+    if P5stages(i)==stagesfit_ICA(i)
+        n=n+1;
+    end
+end
 
+acc_ICA = n/length(P5stages)*100;
+clear i n
+
+display("The algorithm has an accuracy of " + acc_ICA +"%")
+
+figure()
+plot(stagesfit_ICA);hold on
+plot(P5stages); hold off
+title("Hypnogram real vs ML")
+legend({'real','ML'},'Location','southeast')
+ylim([0 5])
+xlim([0 length(P5stages)])
+xlabel("Epoch Number")
+ylabel("Sleep Stages")
+set(gca,'ytick',[0:5],'yticklabel',{'REM','N4','N3','N2','N1','Wake'});
+
+figure()
+confusionchart(P5stages,stagesfit_ICA)
+
+% Only filters
+stagesfit_noICA=trainedModel_noICA.predictFcn(P5features_noICA); %prediction of stages
+n=0;
+for i=1:length(P5stages)
+    if P5stages(i)==stagesfit_noICA(i)
+        n=n+1;
+    end
+end
+
+acc_noICA = n/length(P5stages)*100;
+clear i n
+
+display("The algorithm has an accuracy of " + acc_noICA +"%")
+
+figure()
+plot(stagesfit_noICA);hold on
+plot(P5stages); hold off
+title("Hypnogram real vs ML")
+legend({'real','ML'},'Location','southeast')
+ylim([0 5])
+xlim([0 length(P5stages)])
+xlabel("Epoch Number")
+ylabel("Sleep Stages")
+set(gca,'ytick',[0:5],'yticklabel',{'REM','N4','N3','N2','N1','Wake'});
+
+figure()
+confusionchart(P5stages,stagesfit_noICA)
+
+% Raw
+stagesfit_raw=trainedModel_raw.predictFcn(P5features_raw); %prediction of stages
+n=0;
+for i=1:length(P5stages)
+    if P5stages(i)==stagesfit_raw(i)
+        n=n+1;
+    end
+end
+
+acc_raw = n/length(P5stages)*100;
+clear i n
+
+display("The algorithm has an accuracy of " + acc_raw +"%")
+
+figure()
+plot(stagesfit_raw);hold on
+plot(P5stages); hold off
+title("Hypnogram real vs ML")
+legend({'real','ML'},'Location','southeast')
+ylim([0 5])
+xlim([0 length(P5stages)])
+xlabel("Epoch Number")
+ylabel("Sleep Stages")
+set(gca,'ytick',[0:5],'yticklabel',{'REM','N4','N3','N2','N1','Wake'});
+
+figure()
+confusionchart(P5stages,stagesfit_raw)
 
 
 
