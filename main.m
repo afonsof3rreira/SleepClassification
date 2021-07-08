@@ -121,7 +121,9 @@ load('./data/raw_data/mat_files/n11.mat');disp("n11 loaded")
 
 %% 7. Segment signals
 segmentedsignals_raw=cell(5,9);
-names={'n1','n2','n3','n5','n11'}; % names of variables we are segmenting in 30s epochs
+% names={'n1','n2','n3','n5','n11'}; % names of variables we are segmenting in 30s epochs (raw, no upsampling)
+names = {'n1_','n2_','n3_','n5_','n11_'}; % names of variables we are segmenting in 30s epochs (raw, upsampled)
+
 for i=1:length(names)
     patient=eval(names{i});
     for j=1:9
@@ -141,7 +143,11 @@ end
 
 clear i names patient %samplingfrequencies
 
-save('./data/segmented_signals/segmentedsignals_raw.mat', 'segmentedsignals_raw', '-v7.3');
+% save('./data/segmented_signals/segmentedsignals_raw.mat', 'segmentedsignals_raw', '-v7.3');
+
+segmentedsignals_resampled = segmentedsignals_raw; % this is a workaround to avoid changing all the var names
+clear segmentedsignals_raw
+save('./data/segmented_signals/segmentedsignals_resampled.mat', 'segmentedsignals_resampled', '-v7.3');
 
 %% 8. Read txt (ground truths)
 % turn txts into column vector
