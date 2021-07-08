@@ -566,6 +566,26 @@ segsig=segmentedsignals_ICAfilt(1:4,:);
 [features_ICAfilt,stages_ICAfilt]=dofeaturematrix(segsig,groundtruth,samplingfrequencies);
 disp("Feature matrix using ICA and filters done.");
 
+%% Save
+save('./data/feature_matrix/features_ICAfilt.mat', 'features_ICAfilt', '-v7.3');
+save('./data/feature_matrix/stages_ICAfilt.mat', 'stages_ICAfilt', '-v7.3');
+
+save('./data/feature_matrix/features_noICA.mat', 'features_noICA', '-v7.3');
+save('./data/feature_matrix/stages_noICA.mat', 'stages_noICA', '-v7.3');
+
+save('./data/feature_matrix/features_raw.mat', 'features_raw', '-v7.3');
+save('./data/feature_matrix/stages_raw.mat', 'stages_raw', '-v7.3');
+
+%% Load
+load('./data/feature_matrix/features_ICAfilt.mat', 'features_ICAfilt');
+load('./data/feature_matrix/stages_ICAfilt.mat', 'stages_ICAfilt');
+
+load('./data/feature_matrix/features_noICA.mat', 'features_noICA');
+load('./data/feature_matrix/stages_noICA.mat', 'stages_noICA');
+
+load('./data/feature_matrix/features_raw.mat', 'features_raw');
+load('./data/feature_matrix/stages_raw.mat', 'stages_raw');
+
 %% 28 Test on last patient
 [P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
 
