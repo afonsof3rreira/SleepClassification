@@ -536,7 +536,9 @@ save('./Selected_dataset/sleepstages.mat', 'sleepstages', '-v7.3');
 disp("sleepstages saved")
 
 %% 26 Load segmented signals and sleepstages
-load('./Selected_dataset/segmentedsignals.mat');disp("segmentedsignals loaded")
+load('./data/segmented_signals/segmentedsignals_raw.mat');disp("segmentedsignals loaded")
+load('./data/segmented_signals/segmentedsignals_noICA.mat');disp("segmentedsignals loaded")
+load('./data/segmented_signals/segmentedsignals_ICAfilt.mat');disp("segmentedsignals loaded")
 load('./Selected_dataset/sleepstages.mat');disp("sleepstages loaded")
 
 %% 27 Do feature matrix
@@ -574,10 +576,19 @@ load('./data/feature_matrix/features_noICA.mat', 'features_noICA');
 load('./data/feature_matrix/features_raw.mat', 'features_raw');
 load('./data/feature_matrix/stages.mat', 'stages');
 
-%% 28 Test on last patient
-[P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
+%% Features for last patient
+[P5features_raw,P5stages]=dofeaturematrix(segmentedsignals_raw(5,:),sleepstages(5),samplingfrequencies);
+[P5features_ICAfilt,~]=dofeaturematrix(segmentedsignals_ICAfilt(5,:),sleepstages(5),samplingfrequencies);
+[P5features_noICA,~]=dofeaturematrix(segmentedsignals_noICA(5,:),sleepstages(5),samplingfrequencies);
+disp("Feature matrixes for patient 5 done.");
 
-stagesfit=trainedModel.predictFcn(P5features); %prediction of stages
+save('./data/feature_matrix/P5features_raw.mat', 'P5features_raw', '-v7.3');
+save('./data/feature_matrix/P5features_ICAfilt.mat', 'P5features_raw', '-v7.3');
+save('./data/feature_matrix/P5features_noICA.mat', 'P5features_noICA', '-v7.3');
+save('./data/feature_matrix/P5stages.mat', 'P5stages', '-v7.3');
+
+%% 28 Test on last patient
+stagesfit=trainedModel_ICAfilt.predictFcn(P5features_ICAfilt); %prediction of stages
 n=0;
 for i=1:length(P5stages)
     if P5stages(i)==stagesfit(i)
@@ -585,7 +596,11 @@ for i=1:length(P5stages)
     end
 end
 
-display("The algorith has an accuracy of " + n/length(P5stages)*100 +"%")
+acc = n/length(P5stages)*100;
+clear i n
+
+display("The algorithm has an accuracy of " + acc +"%")
+
 figure(4)
 plot(stagesfit);hold on
 plot(P5stages); hold off
@@ -596,4 +611,13 @@ xlim([0 length(P5stages)])
 xlabel("Epoch Number")
 ylabel("Sleep Stages")
 set(gca,'ytick',[0:6],'yticklabel',{'REM','','N3','N2','N1','Wake',''});
+
+%% Obtain confusion charts using exported models
+% adapt names according to the variables
+stagesfit = trainedModel.predictFcn(P5features);
+confusionchart(P5stages,stagesfit)
+
+
+
+
 
