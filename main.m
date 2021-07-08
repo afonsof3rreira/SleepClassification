@@ -566,12 +566,14 @@ disp("Feature matrix using ICA and filters done.");
 
 %% Save
 save('./data/feature_matrix/features_ICAfilt.mat', 'features_ICAfilt', '-v7.3');
+save('./data/feature_matrix/features_ICA.mat', 'features_ICA', '-v7.3');
 save('./data/feature_matrix/features_noICA.mat', 'features_noICA', '-v7.3');
 save('./data/feature_matrix/features_raw.mat', 'features_raw', '-v7.3');
 save('./data/feature_matrix/stages.mat', 'stages', '-v7.3');
 
 %% Load
 load('./data/feature_matrix/features_ICAfilt.mat', 'features_ICAfilt');
+load('./data/feature_matrix/features_ICA.mat', 'features_ICA');
 load('./data/feature_matrix/features_noICA.mat', 'features_noICA');
 load('./data/feature_matrix/features_raw.mat', 'features_raw');
 load('./data/feature_matrix/stages.mat', 'stages');
@@ -588,7 +590,15 @@ save('./data/feature_matrix/P5features_ICAfilt.mat', 'P5features_raw', '-v7.3');
 save('./data/feature_matrix/P5features_noICA.mat', 'P5features_noICA', '-v7.3');
 save('./data/feature_matrix/P5stages.mat', 'P5stages', '-v7.3');
 =======
+%% 28 Train in the classification lerner app
 
+%% 29 Test on last patient
+[P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
+save('./data/feature_matrix/P5features.mat', 'P5features', '-v7.3');
+save('./data/feature_matrix/P5features.mat', 'P5stages', '-v7.3');
+%%
+load('./data/feature_matrix/features_P5.mat', 'P5features');
+load('./data/feature_matrix/features_P5.mat', 'P5stages');
 >>>>>>> f3dc600d6a046a4e9d68afcac152967f773dae89
 
 %% 28 Test on last patient
