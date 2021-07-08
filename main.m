@@ -298,6 +298,7 @@ for i = 1:5
     
 end
 
+clear var var_p i j
 % Save
 
 save('./data/filtered_signals_noICA/n1p_noICA.mat', 'n1p_noICA', '-v7.3');
@@ -312,6 +313,31 @@ load('./data/filtered_signals_noICA/n2p_noICA.mat', 'n2p_noICA');
 load('./data/filtered_signals_noICA/n3p_noICA.mat', 'n3p_noICA');
 load('./data/filtered_signals_noICA/n5p_noICA.mat', 'n5p_noICA');
 load('./data/filtered_signals_noICA/n11p_noICA.mat', 'n11p_noICA');
+
+%% Segment signals and save (no ICA, only filters)
+segmentedsignals_noICA=cell(5,9);
+samplingfrequencies=512.*ones(5,9);
+names={'n1p_noICA','n2p_noICA','n3p_noICA','n5p_noICA','n11p_noICA'}; % names of variables we are segmenting in 30s epochs
+for i=1:length(names)
+    patient=eval(names{i});
+    for j=1:9
+        disp(i+" , "+j);
+        segmentedsignals_noICA{i,j}=segmentsignal(patient(j,:),samplingfrequencies(i,j));
+    end
+end
+clear i j patient names
+
+% Synchronize with stages txt files
+for i=1:9
+    segmentedsignals_noICA{1,i}=segmentedsignals_noICA{1,i}(8:end-6,:);
+    segmentedsignals_noICA{2,i}=segmentedsignals_noICA{2,i}(3:end,:);
+    segmentedsignals_noICA{3,i}=segmentedsignals_noICA{3,i}(375:end-97,:);
+    segmentedsignals_noICA{4,i}=segmentedsignals_noICA{4,i}(102:end-2,:);
+    segmentedsignals_noICA{5,i}=segmentedsignals_noICA{5,i}(41:end-2,:);
+end
+
+save('./data/segmented_signals/segmentedsignals_noICA.mat', 'segmentedsignals_noICA', '-v7.3');
+disp("segmentedsignals saved")
 
 %% 16. Performing z-score normalization followed by ICA
 
@@ -495,6 +521,7 @@ end
 save('./data/segmented_signals/segmentedsignals_ICAfilt.mat', 'segmentedsignals_ICAfilt', '-v7.3');
 disp("segmentedsignals saved")
 
+
 %% 25 Read txt (SKIP)
 
 % turn txts into column vector
@@ -517,10 +544,27 @@ load('./Selected_dataset/sleepstages.mat');disp("sleepstages loaded")
 [P5features,P5stages]=dofeaturematrix(segmentedsignals_raw(5,:),sleepstages(5),samplingfrequencies);
 
 %% 27 Do feature matrix
-segsig=segmentedsignals(1:4,:);
 groundtruth=sleepstages(1:4);
-[features,stages]=dofeaturematrix(segsig,groundtruth,samplingfrequencies);
 
+% Raw signals
+segsig=segmentedsignals_raw(1:4,:);
+[features_raw,stages_raw]=dofeaturematrix(segsig,groundtruth,samplingfrequencies);
+disp("Feature matrix using raw signals done.");
+
+% Only ICA
+segsig=segmentedsignals_ICA(1:4,:);
+[features_ICA,stages_ICA]=dofeaturematrix(segsig,groundtruth,samplingfrequencies);
+disp("Feature matrix using only ICA done.");
+
+% Only filters
+segsig=segmentedsignals_noICA(1:4,:);
+[features_noICA,stages_noICA]=dofeaturematrix(segsig,groundtruth,samplingfrequencies);
+disp("Feature matrix using only filters done.");
+
+% Filters + ICA
+segsig=segmentedsignals_ICAfilt(1:4,:);
+[features_ICAfilt,stages_ICAfilt]=dofeaturematrix(segsig,groundtruth,samplingfrequencies);
+disp("Feature matrix using ICA and filters done.");
 
 %% 28 Test on last patient
 [P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
