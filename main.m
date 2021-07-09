@@ -620,12 +620,15 @@ save('./data/training_models/trainedModelICA.mat', 'trainedModelICA', '-v7.3');
 save('./data/training_models/trainedModelICAfilt.mat', 'trainedModelICAfilt', '-v7.3');
 save('./data/training_models/trainedModelnoICA.mat', 'trainedModelnoICA', '-v7.3');
 save('./data/training_models/trainedModelraw.mat', 'trainedModelraw', '-v7.3');
+save('./data/training_models/trainedModel_reduced_ICAfilt.mat', 'trainedModel_reduced_ICAfilt', '-v7.3');
 
 %%
 load('./data/training_models/trainedModelICA.mat', 'trainedModelICA');
 load('./data/training_models/trainedModelICAfilt.mat', 'trainedModelICAfilt');
 load('./data/training_models/trainedModelnoICA.mat', 'trainedModelnoICA');
 load('./data/training_models/trainedModelraw.mat', 'trainedModelraw');
+load('./data/training_models/trainedModel_reduced_ICAfilt.mat', 'trainedModel_reduced_ICAfilt');
+
 %% 29 Test on last patient
 [P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
 save('./data/feature_matrix/P5features.mat', 'P5features', '-v7.3');
