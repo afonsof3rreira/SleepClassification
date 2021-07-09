@@ -191,16 +191,50 @@ boxplot(P5features_noICA(:,57),stagesfit_noICA); title('dif maxmin hrv');%bom pa
 
 %% Sleep spindles between different EEG signals
 % ICAfilt
-figure (1)
-boxplot(P5features_ICAfilt(:,12),stagesfit_ICAfilt); title('C4A1'); 
-figure (2)
-boxplot(P5features_ICAfilt(:,24),stagesfit_ICAfilt); title('C4P4'); 
-figure (3)
-boxplot(P5features_ICAfilt(:,36),stagesfit_ICAfilt); title('F4C4'); 
-figure (4)
-boxplot(P5features_ICAfilt(:,48),stagesfit_ICAfilt); title('P4O2'); 
+figure ('color','w')
+subplot(2, 2, 1)
+boxplot(P5features_ICAfilt(:,12),stagesfit_ICAfilt,...
+    'Labels',{'W', 'S1', 'S2', 'S3', 'S4', 'R'});
 
-% Only filters
+title('C4A1',...
+    'interpreter','latex','FontUnits','points',...
+    'FontWeight','demi','FontSize',16,'FontName','Times');
+xlabel('sleep stages','interpreter','latex','FontUnits','points',...
+    'FontWeight','normal','FontSize',14,'FontName','Times');
+
+subplot(2, 2, 2)
+boxplot(P5features_ICAfilt(:,24),stagesfit_ICAfilt,...
+    'Labels',{'W', 'S1', 'S2', 'S3', 'S4', 'R'});
+title('C4P4',...
+    'interpreter','latex','FontUnits','points',...
+    'FontWeight','demi','FontSize',16,'FontName','Times');
+xlabel('sleep stages','interpreter','latex','FontUnits','points',...
+    'FontWeight','normal','FontSize',14,'FontName','Times');
+
+subplot(2, 2, 3)
+boxplot(P5features_ICAfilt(:,36),stagesfit_ICAfilt,...
+    'Labels',{'W', 'S1', 'S2', 'S3', 'S4', 'R'});
+title('F4C4',...
+    'interpreter','latex','FontUnits','points',...
+    'FontWeight','demi','FontSize',16,'FontName','Times');
+xlabel('sleep stages','interpreter','latex','FontUnits','points',...
+    'FontWeight','normal','FontSize',14,'FontName','Times');
+
+subplot(2, 2, 4)
+boxplot(P5features_ICAfilt(:,48),stagesfit_ICAfilt,...
+    'Labels',{'W', 'S1', 'S2', 'S3', 'S4', 'R'});
+title('P4O2',...
+    'interpreter','latex','FontUnits','points',...
+    'FontWeight','demi','FontSize',16,'FontName','Times');
+xlabel('sleep stages','interpreter','latex','FontUnits','points',...
+    'FontWeight','normal','FontSize',14,'FontName','Times');
+
+sgtitle('Sleep spindles between different EEG signals',...
+    'interpreter','latex','FontUnits','points',...
+    'FontWeight','demi','FontSize',18,'FontName','Times');
+
+
+%% Only filters
 figure (1)
 boxplot(P5features_noICA(:,12),stagesfit_noICA); title('C4A1'); 
 figure (2)
