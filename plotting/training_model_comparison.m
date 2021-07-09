@@ -95,19 +95,19 @@ if mode == 'Y' || mode == 'y'
         score = score_cell{i, 1};
 
         n_classes = size(score, 2);
-        gt_s1 = zeros(1, sum(P5stages == 1));
-        gt_s2 = zeros(1, sum(P5stages == 2));
+        gt_s1 = zeros(1, sum(P5stages == 5));
+        gt_s2 = zeros(1, sum(P5stages == 4));
         gt_s3 = zeros(1, sum(P5stages == 3));
-        gt_s4 = zeros(1, sum(P5stages == 4));
-        gt_s5 = zeros(1, sum(P5stages == 5));
-        gt_s6 = zeros(1, sum(P5stages == 6));
+        gt_s4 = zeros(1, sum(P5stages == 2));
+        gt_s5 = zeros(1, sum(P5stages == 1));
+        gt_s6 = zeros(1, sum(P5stages == 0));
 
-        ind_gt_s1 = find(P5stages == 1);
-        ind_gt_s2 = find(P5stages == 2);
+        ind_gt_s1 = find(P5stages == 5);
+        ind_gt_s2 = find(P5stages == 4);
         ind_gt_s3 = find(P5stages == 3);
-        ind_gt_s4 = find(P5stages == 4);
-        ind_gt_s5 = find(P5stages == 5);
-        ind_gt_s6 = find(P5stages == 6);
+        ind_gt_s4 = find(P5stages == 2);
+        ind_gt_s5 = find(P5stages == 1);
+        ind_gt_s6 = find(P5stages == 0);
 
         scores_s1 = score(ind_gt_s1, 1);
         scores_s2 = score(ind_gt_s2, 1);
@@ -160,19 +160,19 @@ elseif mode == 'N' || mode == 'n'
     
     score = score_cell{1, 1};
 
-    gt_s1 = zeros(1, sum(P5stages == 1));
-    gt_s2 = zeros(1, sum(P5stages == 2));
+    gt_s1 = zeros(1, sum(P5stages == 5));
+    gt_s2 = zeros(1, sum(P5stages == 4));
     gt_s3 = zeros(1, sum(P5stages == 3));
-    gt_s4 = zeros(1, sum(P5stages == 4));
-    gt_s5 = zeros(1, sum(P5stages == 5));
-    gt_s6 = zeros(1, sum(P5stages == 6));
+    gt_s4 = zeros(1, sum(P5stages == 2));
+    gt_s5 = zeros(1, sum(P5stages == 1));
+    gt_s6 = zeros(1, sum(P5stages == 0));
 
-    ind_gt_s1 = find(P5stages == 1);
-    ind_gt_s2 = find(P5stages == 2);
+    ind_gt_s1 = find(P5stages == 5);
+    ind_gt_s2 = find(P5stages == 4);
     ind_gt_s3 = find(P5stages == 3);
-    ind_gt_s4 = find(P5stages == 4);
-    ind_gt_s5 = find(P5stages == 5);
-    ind_gt_s6 = find(P5stages == 6);
+    ind_gt_s4 = find(P5stages == 2);
+    ind_gt_s5 = find(P5stages == 1);
+    ind_gt_s6 = find(P5stages == 0);
 
     scores_s1 = score(ind_gt_s1, 1);
     scores_s2 = score(ind_gt_s2, 1);
@@ -222,7 +222,13 @@ elseif mode == 'N' || mode == 'n'
 end
 
 
-%% 3. Plotting accuracies
+%% 3. Plotting sensitivities
+% W=5
+% S1=4
+% S2=3
+% S3=2
+% S4=1
+% REM=0
 
 prep_labels = ["No Preprocessing", "ICA", "Filtering", "ICA $+$ Filtering"];
 
@@ -236,19 +242,19 @@ if mode == 'Y' || mode == 'y'
     
     figure();
     for i = 1:4
-        s1_ind = find(P5stages == 1);
-        s2_ind = find(P5stages == 2);
-        s3_ind = find(P5stages == 3);
-        s4_ind = find(P5stages == 4);
-        s5_ind = find(P5stages == 5);
-        s6_ind = find(P5stages == 6);
+        s1_ind = find(P5stages == 5); % W
+        s2_ind = find(P5stages == 4); % S1
+        s3_ind = find(P5stages == 3); % S2
+        s4_ind = find(P5stages == 2); % S3
+        s5_ind = find(P5stages == 1); % S4
+        s6_ind = find(P5stages == 0); % REM
 
-        confusion_result(1, 1) = sum(label_cell{i, 1}(s1_ind, 1) == 1) / length(label_cell{i, 1}(s1_ind, 1));
-        confusion_result(2, 1) = sum(label_cell{i, 1}(s2_ind, 1) == 2) / length(label_cell{i, 1}(s2_ind, 1));
+        confusion_result(1, 1) = sum(label_cell{i, 1}(s1_ind, 1) == 5) / length(label_cell{i, 1}(s1_ind, 1));
+        confusion_result(2, 1) = sum(label_cell{i, 1}(s2_ind, 1) == 4) / length(label_cell{i, 1}(s2_ind, 1));
         confusion_result(3, 1) = sum(label_cell{i, 1}(s3_ind, 1) == 3) / length(label_cell{i, 1}(s3_ind, 1));
-        confusion_result(4, 1) = sum(label_cell{i, 1}(s4_ind, 1) == 4) / length(label_cell{i, 1}(s4_ind, 1));
-        confusion_result(5, 1) = sum(label_cell{i, 1}(s5_ind, 1) == 5) / length(label_cell{i, 1}(s5_ind, 1));
-        confusion_result(6, 1) = sum(label_cell{i, 1}(s6_ind, 1) == 6) / length(label_cell{i, 1}(s6_ind, 1));
+        confusion_result(4, 1) = sum(label_cell{i, 1}(s4_ind, 1) == 2) / length(label_cell{i, 1}(s4_ind, 1));
+        confusion_result(5, 1) = sum(label_cell{i, 1}(s5_ind, 1) == 1) / length(label_cell{i, 1}(s5_ind, 1));
+        confusion_result(6, 1) = sum(label_cell{i, 1}(s6_ind, 1) == 0) / length(label_cell{i, 1}(s6_ind, 1));
 
         ax(i, 1) = plot([1, 2, 3, 4, 5, 6], confusion_result', 'LineWidth', 2, 'Color', color_pattern(i, :)); hold on;
         scatter([1, 2, 3, 4, 5, 6], confusion_result', 70, 'LineWidth', 2, 'MarkerEdgeColor', color_pattern(i, :));
@@ -262,14 +268,14 @@ if mode == 'Y' || mode == 'y'
         grid on;
         grid minor;
         
-        title("Classification accuracy per sleep stage for all preprocessing settings",...
+        title("Classification sensitivity per sleep stage for all preprocessing settings",...
         'interpreter','latex','FontUnits','points',...
         'FontWeight','demi','FontSize',18,'FontName','Times');
 
         xlabel('sleep stages','interpreter','latex','FontUnits','points',...
         'FontWeight','normal','FontSize',16,'FontName','Times');
 
-        ylabel('accuracy','interpreter','latex','FontUnits','points',...
+        ylabel('sensitivity','interpreter','latex','FontUnits','points',...
         'FontWeight','normal','FontSize',16,'FontName','Times');
 
         legend([ax(:)], prep_labels,...
@@ -283,19 +289,19 @@ if mode == 'Y' || mode == 'y'
         
 else
     
-    s1_ind = find(P5stages == 1);
-    s2_ind = find(P5stages == 2);
+    s1_ind = find(P5stages == 5);
+    s2_ind = find(P5stages == 4);
     s3_ind = find(P5stages == 3);
-    s4_ind = find(P5stages == 4);
-    s5_ind = find(P5stages == 5);
-    s6_ind = find(P5stages == 6);
+    s4_ind = find(P5stages == 2);
+    s5_ind = find(P5stages == 1);
+    s6_ind = find(P5stages == 0);
 
-    confusion_result(1, 1) = sum(label_cell{1, 1}(s1_ind, 1) == 1) / length(label_cell{1, 1}(s1_ind, 1));
-    confusion_result(2, 1) = sum(label_cell{1, 1}(s2_ind, 1) == 2) / length(label_cell{1, 1}(s2_ind, 1));
+    confusion_result(1, 1) = sum(label_cell{1, 1}(s1_ind, 1) == 5) / length(label_cell{1, 1}(s1_ind, 1));
+    confusion_result(2, 1) = sum(label_cell{1, 1}(s2_ind, 1) == 4) / length(label_cell{1, 1}(s2_ind, 1));
     confusion_result(3, 1) = sum(label_cell{1, 1}(s3_ind, 1) == 3) / length(label_cell{1, 1}(s3_ind, 1));
-    confusion_result(4, 1) = sum(label_cell{1, 1}(s4_ind, 1) == 4) / length(label_cell{1, 1}(s4_ind, 1));
-    confusion_result(5, 1) = sum(label_cell{1, 1}(s5_ind, 1) == 5) / length(label_cell{1, 1}(s5_ind, 1));
-    confusion_result(6, 1) = sum(label_cell{1, 1}(s6_ind, 1) == 6) / length(label_cell{1, 1}(s6_ind, 1));
+    confusion_result(4, 1) = sum(label_cell{1, 1}(s4_ind, 1) == 2) / length(label_cell{1, 1}(s4_ind, 1));
+    confusion_result(5, 1) = sum(label_cell{1, 1}(s5_ind, 1) == 1) / length(label_cell{1, 1}(s5_ind, 1));
+    confusion_result(6, 1) = sum(label_cell{1, 1}(s6_ind, 1) == 0) / length(label_cell{1, 1}(s6_ind, 1));
 
     figure();
     plot([1, 2, 3, 4, 5, 6], confusion_result'); hold on;
@@ -305,17 +311,42 @@ else
     xticks([1 2 3 4 5 6]);
     xticklabels({'W', 'S1','S2', 'S3', 'S4', 'R'});
     
-    title(strcat("Classification accuracy per sleep stage: ", prep_labels(1,  prep_ind)),...
+    title(strcat("Classification sensitivity per sleep stage: ", prep_labels(1,  prep_ind)),...
     'interpreter','latex','FontUnits','points',...
     'FontWeight','demi','FontSize',18,'FontName','Times');
 
     xlabel('sleep stages','interpreter','latex','FontUnits','points',...
     'FontWeight','normal','FontSize',16,'FontName','Times');
 
-    ylabel('accuracy','interpreter','latex','FontUnits','points',...
+    ylabel('sensitivity','interpreter','latex','FontUnits','points',...
     'FontWeight','normal','FontSize',16,'FontName','Times');
 
 end
+
+%% Scatter plots for segmentation boundary assessment 
+% (2 features out of the 57 features of the higher space)
+
+s1_inds = find(label_cell{1, 1}(:, 1) == 5);
+s2_inds = find(label_cell{1, 1}(:, 1) == 3);
+
+
+s1_feat1 = test_cell{1, 1}(s1_inds, 1);
+s1_feat2 = test_cell{1, 1}(s1_inds, 2);
+
+s2_feat1 = test_cell{1, 1}(s2_inds, 1);
+s2_feat2 = test_cell{1, 1}(s2_inds, 2);
+
+figure();
+scatter(s1_feat1, s1_feat2, 'b.'); hold on;
+scatter(s2_feat1, s2_feat2, 'r.'); hold off;
+xlabel('feature 1');
+ylabel('feature 2');
+legend('W stage', 'S2 stage');
+
+% gscatter(test_cell{1, 1}(:, 1),test_cell{1, 1}(:, 2), label_cell{1, 1}(:, 1), 'ymcrgb', '.',5);% , 'MarkerSize', 10);
+% axis tight
+% legend off
+
 
 %% (DEPRECATED) Plotting a boxplot using data chunks of predictors
 
