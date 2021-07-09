@@ -323,6 +323,29 @@ else
 
 end
 
+%% Scatter plots for segmentation boundary assessment 
+% (2 features out of the 57 features of the higher space)
+
+s1_inds = find(label_cell{1, 1}(:, 1) == 5);
+s2_inds = find(label_cell{1, 1}(:, 1) == 3);
+
+
+s1_feat1 = test_cell{1, 1}(s1_inds, 1);
+s1_feat2 = test_cell{1, 1}(s1_inds, 2);
+
+s2_feat1 = test_cell{1, 1}(s2_inds, 1);
+s2_feat2 = test_cell{1, 1}(s2_inds, 2);
+
+figure();
+scatter(s1_feat1, s1_feat2, 'b.'); hold on;
+scatter(s2_feat1, s2_feat2, 'r.'); hold off;
+xlabel('feature 1');
+ylabel('feature 2');
+legend('W stage', 'S2 stage');
+
+% gscatter(test_cell{1, 1}(:, 1),test_cell{1, 1}(:, 2), label_cell{1, 1}(:, 1), 'ymcrgb', '.',5);% , 'MarkerSize', 10);
+% axis tight
+% legend off
 
 
 %% (DEPRECATED) Plotting a boxplot using data chunks of predictors
