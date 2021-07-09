@@ -4,15 +4,15 @@
 
 %% 1. loading trained models
 mode = input('Do you want to retreive all preprocessed signals? (Y/N): ', 's');
-str_vec_model = {'trainedModelraw', 'trainedModelICA', 'trainedModelnoICA', 'trainedModelICAfilt'};
-str_test = {'P5features_raw', 'P5features_ICA', 'P5features_noICA', 'P5features_ICAfilt'};
+str_vec_model = {'trainedModelraw', 'trainedModelICA', 'trainedModelnoICA', 'trainedModelICAfilt', 'trainedModel_reduced_ICAfilt'};
+str_test = {'P5features_raw', 'P5features_ICA', 'P5features_noICA', 'P5features_ICAfilt', 'P5features_reduced_ICAfilt'};
 
 if mode == 'Y' || mode == 'y'
 
-    model_cell = cell(4, 1);
-    test_cell = cell(4, 1);    
+    model_cell = cell(size(str_vec_model, 2), 1);
+    test_cell = cell(size(str_vec_model, 2), 1);    
     
-    for i = 1:4
+    for i = 1:size(str_vec_model, 2)
         disp(strcat("loading mat files for ", string(str_vec_model{1, i}(1, 13:end)), "-preprocessed data..."));
 
         trainedModel = load(strcat('./data/training_models/', str_vec_model{1, i}, '.mat')); disp("trained model loaded");
@@ -27,7 +27,7 @@ if mode == 'Y' || mode == 'y'
 
 elseif mode == 'N' || mode == 'n' 
     
-    prep_ind = input('Pick a preprocessing combination index from 1 to 4: ');
+    prep_ind = input('Pick a preprocessing/feture combination index from 1 to 5: ');
     
     model_cell = cell(1, 1);
     test_cell = cell(1, 1);  
@@ -53,12 +53,12 @@ P5stages = stages_mat.sleepstages{5, 1};
 
 if mode == 'Y' || mode == 'y'
 
-    label_cell = cell(4, 1);
-    score_cell = cell(4, 1);
+    label_cell = cell(size(str_vec_model, 2), 1);
+    score_cell = cell(size(str_vec_model, 2), 1);
 
     % classifying
     disp("classifying testing data...");
-    for i = 1: 4
+    for i = 1: size(str_vec_model, 2)
         [label_cell{i, 1}, score, ~] = predict(model_cell{i, 1}.ClassificationSVM,...
                                                           test_cell{i, 1});
 
@@ -86,12 +86,12 @@ end
 
 overlap_scatter = input('Do you want to overalp scattered data points on the boxplots? (Y/N): ', 's');
 
-prep_labels = ["No Preprocessing", "ICA", "Filtering", "ICA $+$ Filtering"];
+prep_labels = ["No Preprocessing", "ICA", "Filtering", "ICA $+$ Filtering", "ICA $+$ Filtering with feature selection"];
 
 if mode == 'Y' || mode == 'y'
 
 
-    for i = 1:4
+    for i = 1:size(str_vec_model, 2)
         score = score_cell{i, 1};
 
         n_classes = size(score, 2);
@@ -230,18 +230,19 @@ end
 % S4=1
 % REM=0
 
-prep_labels = ["No Preprocessing", "ICA", "Filtering", "ICA $+$ Filtering"];
+prep_labels = ["No Preprocessing", "ICA", "Filtering", "ICA $+$ Filtering", "ICA $+$ Filtering with feature selection"];
 
 if mode == 'Y' || mode == 'y'
     color_pattern = [[0, 0.4470, 0.7410];...
                      [0.9290, 0.6940, 0.1250];...
                      [0.4660, 0.6740, 0.1880];...
-                     [0.6350, 0.0780, 0.1840]];
+                     [0.6350, 0.0780, 0.1840];...
+                     [0.3010, 0.7450, 0.9330]];
                  
     ax = gobjects(4, 1);
     
     figure();
-    for i = 1:4
+    for i = 1:size(str_vec_model, 2)
         s1_ind = find(P5stages == 5); % W
         s2_ind = find(P5stages == 4); % S1
         s3_ind = find(P5stages == 3); % S2
@@ -327,21 +328,21 @@ end
 % (2 features out of the 57 features of the higher space)
 
 s1_inds = find(label_cell{1, 1}(:, 1) == 5);
-s2_inds = find(label_cell{1, 1}(:, 1) == 3);
+s2_inds = find(label_cell{1, 1}(:, 1) == 1);
 
 
 s1_feat1 = test_cell{1, 1}(s1_inds, 1);
-s1_feat2 = test_cell{1, 1}(s1_inds, 2);
+s1_feat2 = test_cell{1, 1}(s1_inds, 3);
 
 s2_feat1 = test_cell{1, 1}(s2_inds, 1);
-s2_feat2 = test_cell{1, 1}(s2_inds, 2);
+s2_feat2 = test_cell{1, 1}(s2_inds, 3);
 
 figure();
 scatter(s1_feat1, s1_feat2, 'b.'); hold on;
 scatter(s2_feat1, s2_feat2, 'r.'); hold off;
 xlabel('feature 1');
 ylabel('feature 2');
-legend('W stage', 'S2 stage');
+legend('W stage', 'S1 stage');
 
 % gscatter(test_cell{1, 1}(:, 1),test_cell{1, 1}(:, 2), label_cell{1, 1}(:, 1), 'ymcrgb', '.',5);% , 'MarkerSize', 10);
 % axis tight
