@@ -629,21 +629,29 @@ load('./data/training_models/trainedModelnoICA.mat', 'trainedModelnoICA');
 load('./data/training_models/trainedModelraw.mat', 'trainedModelraw');
 load('./data/training_models/trainedModel_reduced_ICAfilt.mat', 'trainedModel_reduced_ICAfilt');
 
+save('./data/training_models/trainedModel_ICA.mat', 'trainedModel_ICA', '-v7.3');
+save('./data/training_models/trainedModel_ICAfilt.mat', 'trainedModel_ICAfilt', '-v7.3');
+save('./data/training_models/trainedModel_noICA.mat', 'trainedModel_noICA', '-v7.3');
+save('./data/training_models/trainedModel_raw.mat', 'trainedModel_raw', '-v7.3');
+
+%% Load trained models
+load('./data/training_models/trainedModel_ICA.mat', 'trainedModel_ICA');
+load('./data/training_models/trainedModel_ICAfilt.mat', 'trainedModel_ICAfilt');
+load('./data/training_models/trainedModel_noICA.mat', 'trainedModel_noICA');
+load('./data/training_models/trainedModel_raw.mat', 'trainedModel_raw');
+>>>>>>> 7fefec513a04e0a5cb658f509db1725b9b6e3b0e
 %% 29 Test on last patient
 [P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
 save('./data/feature_matrix/P5features.mat', 'P5features', '-v7.3');
 save('./data/feature_matrix/P5stages.mat', 'P5stages', '-v7.3');
-%%
-load('./data/feature_matrix/features_P5.mat', 'P5features');
-load('./data/feature_matrix/features_P5.mat', 'P5stages');
+%% Load last patient features and stages
+load('./data/feature_matrix/P5features_raw.mat', 'P5features_raw');
+load('./data/feature_matrix/P5features_noICA.mat', 'P5features_noICA');
+load('./data/feature_matrix/P5features_ICA.mat', 'P5features_ICA');
+load('./data/feature_matrix/P5features_ICAfilt.mat', 'P5features_ICAfilt');
+load('./data/feature_matrix/P5stages.mat', 'P5stages');
 
-%% Load trained models
-load('./data/training_models/trainedModel_ICAfilt.mat');
-load('./data/training_models/trainedModel_ICA.mat');
-load('./data/training_models/trainedModel_noICA.mat');
-load('./data/training_models/trainedModel_raw.mat');
-
-%% 28 Test on last patient
+%% 29 Test on last patient
 % ICA + filters
 stagesfit_ICAfilt=trainedModel_ICAfilt.predictFcn(P5features_ICAfilt); %prediction of stages
 n=0;
@@ -656,7 +664,7 @@ end
 acc_ICAfilt = n/length(P5stages)*100;
 clear i n
 
-display("The algorithm has an accuracy of " + acc_ICAfilt +"%")
+display("The algorithm with ICA + filters has an accuracy of " + acc_ICAfilt +"%")
 
 figure()
 plot(stagesfit_ICAfilt);hold on
@@ -684,7 +692,7 @@ end
 acc_ICA = n/length(P5stages)*100;
 clear i n
 
-display("The algorithm has an accuracy of " + acc_ICA +"%")
+display("The algorithm with only ICA has an accuracy of " + acc_ICA +"%")
 
 figure()
 plot(stagesfit_ICA);hold on
@@ -712,7 +720,7 @@ end
 acc_noICA = n/length(P5stages)*100;
 clear i n
 
-display("The algorithm has an accuracy of " + acc_noICA +"%")
+display("The algorithm with only filters has an accuracy of " + acc_noICA +"%")
 
 figure()
 plot(stagesfit_noICA);hold on
@@ -740,7 +748,7 @@ end
 acc_raw = n/length(P5stages)*100;
 clear i n
 
-display("The algorithm has an accuracy of " + acc_raw +"%")
+display("The algorithm with raw data has an accuracy of " + acc_raw +"%")
 
 figure()
 plot(stagesfit_raw);hold on
