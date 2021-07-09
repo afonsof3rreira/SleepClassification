@@ -650,7 +650,7 @@ end
 acc_ICAfilt = n/length(P5stages)*100;
 clear i n
 
-display("The algorithm has an accuracy of " + acc_ICAfilt +"%")
+display("The algorithm with ICA + filters has an accuracy of " + acc_ICAfilt +"%")
 
 figure()
 plot(stagesfit_ICAfilt);hold on
@@ -678,7 +678,7 @@ end
 acc_ICA = n/length(P5stages)*100;
 clear i n
 
-display("The algorithm has an accuracy of " + acc_ICA +"%")
+display("The algorithm with only ICA has an accuracy of " + acc_ICA +"%")
 
 figure()
 plot(stagesfit_ICA);hold on
@@ -706,7 +706,7 @@ end
 acc_noICA = n/length(P5stages)*100;
 clear i n
 
-display("The algorithm has an accuracy of " + acc_noICA +"%")
+display("The algorithm with only filters has an accuracy of " + acc_noICA +"%")
 
 figure()
 plot(stagesfit_noICA);hold on
@@ -734,7 +734,7 @@ end
 acc_raw = n/length(P5stages)*100;
 clear i n
 
-display("The algorithm has an accuracy of " + acc_raw +"%")
+display("The algorithm with raw data has an accuracy of " + acc_raw +"%")
 
 figure()
 plot(stagesfit_raw);hold on
