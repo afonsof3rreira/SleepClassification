@@ -222,7 +222,7 @@ elseif mode == 'N' || mode == 'n'
 end
 
 
-%% 3. Plotting accuracies
+%% 3. Plotting sensitivities
 % W=5
 % S1=4
 % S2=3
@@ -268,14 +268,14 @@ if mode == 'Y' || mode == 'y'
         grid on;
         grid minor;
         
-        title("Classification accuracy per sleep stage for all preprocessing settings",...
+        title("Classification sensitivity per sleep stage for all preprocessing settings",...
         'interpreter','latex','FontUnits','points',...
         'FontWeight','demi','FontSize',18,'FontName','Times');
 
         xlabel('sleep stages','interpreter','latex','FontUnits','points',...
         'FontWeight','normal','FontSize',16,'FontName','Times');
 
-        ylabel('accuracy','interpreter','latex','FontUnits','points',...
+        ylabel('sensitivity','interpreter','latex','FontUnits','points',...
         'FontWeight','normal','FontSize',16,'FontName','Times');
 
         legend([ax(:)], prep_labels,...
@@ -311,17 +311,18 @@ else
     xticks([1 2 3 4 5 6]);
     xticklabels({'W', 'S1','S2', 'S3', 'S4', 'R'});
     
-    title(strcat("Classification accuracy per sleep stage: ", prep_labels(1,  prep_ind)),...
+    title(strcat("Classification sensitivity per sleep stage: ", prep_labels(1,  prep_ind)),...
     'interpreter','latex','FontUnits','points',...
     'FontWeight','demi','FontSize',18,'FontName','Times');
 
     xlabel('sleep stages','interpreter','latex','FontUnits','points',...
     'FontWeight','normal','FontSize',16,'FontName','Times');
 
-    ylabel('accuracy','interpreter','latex','FontUnits','points',...
+    ylabel('sensitivity','interpreter','latex','FontUnits','points',...
     'FontWeight','normal','FontSize',16,'FontName','Times');
 
 end
+
 
 
 %% (DEPRECATED) Plotting a boxplot using data chunks of predictors
