@@ -10,6 +10,7 @@ title('Confusion Matrix for model using raw data');
 
 %% ICA + filters
 stagesfit_ICAfilt = trainedModel_ICAfilt.predictFcn(P5features_ICAfilt);
+save('./data/training_models/stagesfit_ICAfilt.mat', 'stagesfit_ICAfilt', '-v7.3')
 
 %% Box plots
 figure ()
@@ -103,6 +104,7 @@ boxplot(P5features_ICAfilt(:,57),stagesfit_ICAfilt); title('dif maxmin hrv');%bo
 
 %% Only filters
 stagesfit_noICA = trainedModel_ICAfilt.predictFcn(P5features_noICA);
+save('./data/training_models/stagesfit_noICA.mat', 'stagesfit_noICA', '-v7.3')
 
 %% features do EEG1 C4A1 (10 features por 4 EEG signals)
 figure (1)
@@ -194,6 +196,7 @@ boxplot(P5features_noICA(:,57),stagesfit_noICA); title('dif maxmin hrv');%bom pa
 figure ('color','w')
 subplot(2, 2, 1)
 boxplot(P5features_ICAfilt(:,12),stagesfit_ICAfilt,...
+    'Notch','on', 'Whisker',1,...
     'Labels',{'W', 'S1', 'S2', 'S3', 'S4', 'R'});
 
 title('C4A1',...
