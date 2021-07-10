@@ -639,7 +639,7 @@ load('./data/training_models/trainedModel_ICA.mat', 'trainedModel_ICA');
 load('./data/training_models/trainedModel_ICAfilt.mat', 'trainedModel_ICAfilt');
 load('./data/training_models/trainedModel_noICA.mat', 'trainedModel_noICA');
 load('./data/training_models/trainedModel_raw.mat', 'trainedModel_raw');
->>>>>>> 7fefec513a04e0a5cb658f509db1725b9b6e3b0e
+
 %% 29 Test on last patient
 [P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
 save('./data/feature_matrix/P5features.mat', 'P5features', '-v7.3');
@@ -654,6 +654,8 @@ load('./data/feature_matrix/P5stages.mat', 'P5stages');
 %% 29 Test on last patient
 % ICA + filters
 stagesfit_ICAfilt=trainedModel_ICAfilt.predictFcn(P5features_ICAfilt); %prediction of stages
+save('./data/training_models/stagesfit_ICAfilt.mat', 'stagesfit_ICAfilt', '-v7.3')
+
 n=0;
 for i=1:length(P5stages)
     if P5stages(i)==stagesfit_ICAfilt(i)
@@ -682,6 +684,8 @@ confusionchart(P5stages,stagesfit_ICAfilt)
 
 % Only ICA
 stagesfit_ICA=trainedModel_ICA.predictFcn(P5features_ICA); %prediction of stages
+save('./data/training_models/stagesfit_ICA.mat', 'stagesfit_ICA', '-v7.3')
+
 n=0;
 for i=1:length(P5stages)
     if P5stages(i)==stagesfit_ICA(i)
@@ -710,6 +714,8 @@ confusionchart(P5stages,stagesfit_ICA)
 
 % Only filters
 stagesfit_noICA=trainedModel_noICA.predictFcn(P5features_noICA); %prediction of stages
+save('./data/training_models/stagesfit_noICA.mat', 'stagesfit_noICA', '-v7.3')
+
 n=0;
 for i=1:length(P5stages)
     if P5stages(i)==stagesfit_noICA(i)
@@ -738,6 +744,8 @@ confusionchart(P5stages,stagesfit_noICA)
 
 % Raw
 stagesfit_raw=trainedModel_raw.predictFcn(P5features_raw); %prediction of stages
+save('./data/training_models/stagesfit_raw.mat', 'stagesfit_raw', '-v7.3')
+
 n=0;
 for i=1:length(P5stages)
     if P5stages(i)==stagesfit_raw(i)
