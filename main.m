@@ -638,6 +638,7 @@ load('./data/feature_matrix/P5features_raw.mat', 'P5features_raw');
 load('./data/feature_matrix/P5features_noICA.mat', 'P5features_noICA');
 load('./data/feature_matrix/P5features_ICA.mat', 'P5features_ICA');
 load('./data/feature_matrix/P5features_ICAfilt.mat', 'P5features_ICAfilt');
+load('./data/feature_matrix/P5features_reduced_ICAfilt.mat', 'P5features_reduced_ICAfilt');
 load('./data/feature_matrix/P5stages.mat', 'P5stages');
 
 %% 29 Test on last patient
