@@ -667,7 +667,7 @@ ylim([0 5])
 xlim([0 length(P5stages)])
 xlabel("Epoch Number")
 ylabel("Sleep Stages")
-set(gca,'ytick',[0:5],'yticklabel',{'REM','N4','N3','N2','N1','Wake'});
+set(gca,'ytick',[0:5],'yticklabel',{'REM','S4','S3','S2','S1','W'});
 
 figure()
 confusionchart(P5stages,stagesfit_ICAfilt)
@@ -697,7 +697,7 @@ ylim([0 5])
 xlim([0 length(P5stages)])
 xlabel("Epoch Number")
 ylabel("Sleep Stages")
-set(gca,'ytick',[0:5],'yticklabel',{'REM','N4','N3','N2','N1','Wake'});
+set(gca,'ytick',[0:5],'yticklabel',{'REM','S4','S3','S2','S1','W'});
 
 figure()
 confusionchart(P5stages,stagesfit_ICA)
@@ -727,7 +727,7 @@ ylim([0 5])
 xlim([0 length(P5stages)])
 xlabel("Epoch Number")
 ylabel("Sleep Stages")
-set(gca,'ytick',[0:5],'yticklabel',{'REM','N4','N3','N2','N1','Wake'});
+set(gca,'ytick',[0:5],'yticklabel',{'REM','S4','S3','S2','S1','W'});
 
 figure()
 confusionchart(P5stages,stagesfit_noICA)
@@ -747,7 +747,7 @@ acc_raw = n/length(P5stages)*100;
 clear i n
 
 display("The algorithm with raw data has an accuracy of " + acc_raw +"%")
-%%
+
 figure()
 plot(stagesfit_raw);hold on
 plot(P5stages);
