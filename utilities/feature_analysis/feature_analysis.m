@@ -196,45 +196,29 @@ boxplot(P5features_noICA(:,57),stagesfit_noICA); title('dif maxmin hrv');%bom pa
 figure ('color','w')
 subplot(2, 2, 1)
 boxplot(P5features_ICAfilt(:,12),stagesfit_ICAfilt,...
-    'Notch','on', 'Whisker',1,...
-    'Labels',{'W', 'S1', 'S2', 'S3', 'S4', 'R'});
-
-title('C4A1',...
-    'interpreter','latex','FontUnits','points',...
-    'FontWeight','demi','FontSize',16,'FontName','Times');
-xlabel('sleep stages','interpreter','latex','FontUnits','points',...
-    'FontWeight','normal','FontSize',14,'FontName','Times');
+    'Labels',{'R','S4','S3','S2','S1','W'});
+title('C4A1');
+ylim([0 200])
 
 subplot(2, 2, 2)
 boxplot(P5features_ICAfilt(:,24),stagesfit_ICAfilt,...
-    'Labels',{'W', 'S1', 'S2', 'S3', 'S4', 'R'});
-title('C4P4',...
-    'interpreter','latex','FontUnits','points',...
-    'FontWeight','demi','FontSize',16,'FontName','Times');
-xlabel('sleep stages','interpreter','latex','FontUnits','points',...
-    'FontWeight','normal','FontSize',14,'FontName','Times');
+    'Labels',{'R','S4','S3','S2','S1','W'});
+title('C4P4');
+ylim([0 200])
 
 subplot(2, 2, 3)
 boxplot(P5features_ICAfilt(:,36),stagesfit_ICAfilt,...
-    'Labels',{'W', 'S1', 'S2', 'S3', 'S4', 'R'});
-title('F4C4',...
-    'interpreter','latex','FontUnits','points',...
-    'FontWeight','demi','FontSize',16,'FontName','Times');
-xlabel('sleep stages','interpreter','latex','FontUnits','points',...
-    'FontWeight','normal','FontSize',14,'FontName','Times');
+    'Labels',{'R','S4','S3','S2','S1','W'});
+title('F4C4');
+ylim([0 200])
 
 subplot(2, 2, 4)
 boxplot(P5features_ICAfilt(:,48),stagesfit_ICAfilt,...
-    'Labels',{'W', 'S1', 'S2', 'S3', 'S4', 'R'});
-title('P4O2',...
-    'interpreter','latex','FontUnits','points',...
-    'FontWeight','demi','FontSize',16,'FontName','Times');
-xlabel('sleep stages','interpreter','latex','FontUnits','points',...
-    'FontWeight','normal','FontSize',14,'FontName','Times');
+    'Labels',{'R','S4','S3','S2','S1','W'});
+title('P4O2');
+ylim([0 200])
 
-sgtitle('Sleep spindles between different EEG signals',...
-    'interpreter','latex','FontUnits','points',...
-    'FontWeight','demi','FontSize',18,'FontName','Times');
+sgtitle('Sleep spindles between different EEG signals');
 
 
 %% Only filters
@@ -442,6 +426,7 @@ boxplot(P5features_raw(:,29),stagesfit_raw); title('F4C4');
 subplot(2, 2, 4)
 boxplot(P5features_raw(:,41),stagesfit_raw); title('P4O2'); 
 
+
 %% Analysis using ICA and filters
 % EEG features In general, alpha, beta, theta and delta waves are good
 % features to use for classification, while skewness does not offer much
@@ -507,7 +492,7 @@ ylim([0 5])
 xlim([0 length(P5stages)])
 xlabel("Epoch Number")
 ylabel("Sleep Stages")
-set(gca,'ytick',[0:5],'yticklabel',{'REM','N4','N3','N2','N1','Wake'});
+set(gca,'ytick',[0:5],'yticklabel',{'R','N4','N3','N2','N1','Wake'});
 
 figure()
 confusionchart(P5stages,stagesfit_reduced_ICAfilt)
