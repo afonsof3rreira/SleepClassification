@@ -764,10 +764,10 @@ plot(P5stages); hold off
 title("Hypnogram real vs ML")
 legend({'real','ML'},'Location','southeast')
 ylim([0 5])
-xlim([0 length(P5stages)])
+xlim([0 500])
 xlabel("Epoch Number")
 ylabel("Sleep Stages")
-set(gca,'ytick',[0:5],'yticklabel',{'REM','N4','N3','N2','N1','Wake'});
+set(gca,'ytick',[0:5],'yticklabel',{'R','S4','S3','S2','S1','W'});
 
 figure()
 confusionchart(P5stages,stagesfit_raw)
