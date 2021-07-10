@@ -10,6 +10,7 @@ title('Confusion Matrix for model using raw data');
 
 %% ICA + filters
 stagesfit_ICAfilt = trainedModel_ICAfilt.predictFcn(P5features_ICAfilt);
+save('./data/training_models/stagesfit_ICAfilt.mat', 'stagesfit_ICAfilt', '-v7.3')
 
 %% Box plots
 figure ()
@@ -103,6 +104,7 @@ boxplot(P5features_ICAfilt(:,57),stagesfit_ICAfilt); title('dif maxmin hrv');%bo
 
 %% Only filters
 stagesfit_noICA = trainedModel_ICAfilt.predictFcn(P5features_noICA);
+save('./data/training_models/stagesfit_noICA.mat', 'stagesfit_noICA', '-v7.3')
 
 %% features do EEG1 C4A1 (10 features por 4 EEG signals)
 figure (1)
@@ -191,16 +193,62 @@ boxplot(P5features_noICA(:,57),stagesfit_noICA); title('dif maxmin hrv');%bom pa
 
 %% Sleep spindles between different EEG signals
 % ICAfilt
-figure (1)
-boxplot(P5features_ICAfilt(:,12),stagesfit_ICAfilt); title('C4A1'); 
-figure (2)
-boxplot(P5features_ICAfilt(:,24),stagesfit_ICAfilt); title('C4P4'); 
-figure (3)
-boxplot(P5features_ICAfilt(:,36),stagesfit_ICAfilt); title('F4C4'); 
-figure (4)
-boxplot(P5features_ICAfilt(:,48),stagesfit_ICAfilt); title('P4O2'); 
+stages_flip_ICAfilt = zeros(length(stagesfit_ICAfilt),1);
+for i = 1:length(stagesfit_ICAfilt)
+    if stagesfit_ICAfilt(i) == 0
+        stages_flip_ICAfilt(i) = 5;
+    elseif stagesfit_ICAfilt(i) == 1
+        stages_flip_ICAfilt(i) = 4;
+    elseif stagesfit_ICAfilt(i) == 2
+        stages_flip_ICAfilt(i) = 3;
+    elseif stagesfit_ICAfilt(i) == 3
+        stages_flip_ICAfilt(i) = 2;
+    elseif stagesfit_ICAfilt(i) == 4
+        stages_flip_ICAfilt(i) = 1;
+    else 
+        stages_flip_ICAfilt(i) = 0;
+    end 
+end
 
-% Only filters
+figure ('color','w')
+subplot(2, 2, 1)
+boxplot(P5features_ICAfilt(:,12),stages_flip_ICAfilt,...
+    'Labels',{'W', 'S1', 'S2', 'S3', 'S4', 'R'});
+title('C4A1','interpreter','latex','FontUnits','points',...
+        'FontWeight','normal','FontSize',12,'FontName','Times');
+ylim([0 200])
+xlabel('sleep stages','interpreter','latex','FontUnits','points',...
+    'FontWeight','normal','FontSize',12,'FontName','Times');
+
+subplot(2, 2, 2)
+boxplot(P5features_ICAfilt(:,24),stages_flip_ICAfilt,...
+    'Labels',{'W', 'S1', 'S2', 'S3', 'S4', 'R'});
+title('C4P4','interpreter','latex','FontUnits','points',...
+        'FontWeight','normal','FontSize',12,'FontName','Times');
+ylim([0 200])
+xlabel('sleep stages','interpreter','latex','FontUnits','points',...
+    'FontWeight','normal','FontSize',12,'FontName','Times');
+
+subplot(2, 2, 3)
+boxplot(P5features_ICAfilt(:,36),stages_flip_ICAfilt,...
+    'Labels',{'W', 'S1', 'S2', 'S3', 'S4', 'R'});
+title('F4C4','interpreter','latex','FontUnits','points',...
+        'FontWeight','normal','FontSize',12,'FontName','Times');
+ylim([0 200])
+xlabel('sleep stages','interpreter','latex','FontUnits','points',...
+    'FontWeight','normal','FontSize',12,'FontName','Times');
+
+subplot(2, 2, 4)
+boxplot(P5features_ICAfilt(:,48),stages_flip_ICAfilt,...
+    'Labels',{'W', 'S1', 'S2', 'S3', 'S4', 'R'});
+title('P4O2','interpreter','latex','FontUnits','points',...
+        'FontWeight','normal','FontSize',12,'FontName','Times');
+ylim([0 200])
+xlabel('sleep stages','interpreter','latex','FontUnits','points',...
+    'FontWeight','normal','FontSize',12,'FontName','Times');
+
+
+%% Only filters
 figure (1)
 boxplot(P5features_noICA(:,12),stagesfit_noICA); title('C4A1'); 
 figure (2)
@@ -405,6 +453,7 @@ boxplot(P5features_raw(:,29),stagesfit_raw); title('F4C4');
 subplot(2, 2, 4)
 boxplot(P5features_raw(:,41),stagesfit_raw); title('P4O2'); 
 
+
 %% Analysis using ICA and filters
 % EEG features In general, alpha, beta, theta and delta waves are good
 % features to use for classification, while skewness does not offer much
@@ -470,7 +519,7 @@ ylim([0 5])
 xlim([0 length(P5stages)])
 xlabel("Epoch Number")
 ylabel("Sleep Stages")
-set(gca,'ytick',[0:5],'yticklabel',{'REM','N4','N3','N2','N1','Wake'});
+set(gca,'ytick',[0:5],'yticklabel',{'R','N4','N3','N2','N1','Wake'});
 
 figure()
 confusionchart(P5stages,stagesfit_reduced_ICAfilt)

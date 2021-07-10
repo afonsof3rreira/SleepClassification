@@ -622,24 +622,13 @@ save('./data/training_models/trainedModelnoICA.mat', 'trainedModelnoICA', '-v7.3
 save('./data/training_models/trainedModelraw.mat', 'trainedModelraw', '-v7.3');
 save('./data/training_models/trainedModel_reduced_ICAfilt.mat', 'trainedModel_reduced_ICAfilt', '-v7.3');
 
-%%
-load('./data/training_models/trainedModelICA.mat', 'trainedModelICA');
-load('./data/training_models/trainedModelICAfilt.mat', 'trainedModelICAfilt');
-load('./data/training_models/trainedModelnoICA.mat', 'trainedModelnoICA');
-load('./data/training_models/trainedModelraw.mat', 'trainedModelraw');
-load('./data/training_models/trainedModel_reduced_ICAfilt.mat', 'trainedModel_reduced_ICAfilt');
-
-save('./data/training_models/trainedModel_ICA.mat', 'trainedModel_ICA', '-v7.3');
-save('./data/training_models/trainedModel_ICAfilt.mat', 'trainedModel_ICAfilt', '-v7.3');
-save('./data/training_models/trainedModel_noICA.mat', 'trainedModel_noICA', '-v7.3');
-save('./data/training_models/trainedModel_raw.mat', 'trainedModel_raw', '-v7.3');
-
 %% Load trained models
 load('./data/training_models/trainedModel_ICA.mat', 'trainedModel_ICA');
 load('./data/training_models/trainedModel_ICAfilt.mat', 'trainedModel_ICAfilt');
 load('./data/training_models/trainedModel_noICA.mat', 'trainedModel_noICA');
 load('./data/training_models/trainedModel_raw.mat', 'trainedModel_raw');
->>>>>>> 7fefec513a04e0a5cb658f509db1725b9b6e3b0e
+load('./data/training_models/trainedModel_reduced_ICAfilt.mat', 'trainedModel_reduced_ICAfilt');
+
 %% 29 Test on last patient
 [P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
 save('./data/feature_matrix/P5features.mat', 'P5features', '-v7.3');
@@ -649,11 +638,14 @@ load('./data/feature_matrix/P5features_raw.mat', 'P5features_raw');
 load('./data/feature_matrix/P5features_noICA.mat', 'P5features_noICA');
 load('./data/feature_matrix/P5features_ICA.mat', 'P5features_ICA');
 load('./data/feature_matrix/P5features_ICAfilt.mat', 'P5features_ICAfilt');
+load('./data/feature_matrix/P5features_reduced_ICAfilt.mat', 'P5features_reduced_ICAfilt');
 load('./data/feature_matrix/P5stages.mat', 'P5stages');
 
 %% 29 Test on last patient
 % ICA + filters
 stagesfit_ICAfilt=trainedModel_ICAfilt.predictFcn(P5features_ICAfilt); %prediction of stages
+save('./data/training_models/stagesfit_ICAfilt.mat', 'stagesfit_ICAfilt', '-v7.3')
+
 n=0;
 for i=1:length(P5stages)
     if P5stages(i)==stagesfit_ICAfilt(i)
@@ -669,19 +661,26 @@ display("The algorithm with ICA + filters has an accuracy of " + acc_ICAfilt +"%
 figure()
 plot(stagesfit_ICAfilt);hold on
 plot(P5stages); hold off
-title("Hypnogram real vs ML")
 legend({'real','ML'},'Location','southeast')
 ylim([0 5])
 xlim([0 length(P5stages)])
-xlabel("Epoch Number")
-ylabel("Sleep Stages")
-set(gca,'ytick',[0:5],'yticklabel',{'REM','N4','N3','N2','N1','Wake'});
-
+xlabel("Epoch Number",...
+    'interpreter','latex','FontUnits','points','FontWeight','normal',...
+    'FontSize',12,'FontName','Times')
+ylabel("Sleep Stages",...
+    'interpreter','latex','FontUnits','points','FontWeight','normal',...
+    'FontSize',12,'FontName','Times')
+set(gca,'ytick',[0:5],'yticklabel',{'R','S4','S3','S2','S1','W'});
+a = get(gca,'YTickLabel');
+set(gca,'YTickLabel',a,'FontUnits','points',...
+    'FontWeight','normal','FontSize',10,'FontName','Times');
 figure()
 confusionchart(P5stages,stagesfit_ICAfilt)
 
 % Only ICA
 stagesfit_ICA=trainedModel_ICA.predictFcn(P5features_ICA); %prediction of stages
+save('./data/training_models/stagesfit_ICA.mat', 'stagesfit_ICA', '-v7.3')
+
 n=0;
 for i=1:length(P5stages)
     if P5stages(i)==stagesfit_ICA(i)
@@ -697,19 +696,26 @@ display("The algorithm with only ICA has an accuracy of " + acc_ICA +"%")
 figure()
 plot(stagesfit_ICA);hold on
 plot(P5stages); hold off
-title("Hypnogram real vs ML")
 legend({'real','ML'},'Location','southeast')
 ylim([0 5])
 xlim([0 length(P5stages)])
-xlabel("Epoch Number")
-ylabel("Sleep Stages")
-set(gca,'ytick',[0:5],'yticklabel',{'REM','N4','N3','N2','N1','Wake'});
-
+xlabel("Epoch Number",...
+    'interpreter','latex','FontUnits','points','FontWeight','normal',...
+    'FontSize',12,'FontName','Times')
+ylabel("Sleep Stages",...
+    'interpreter','latex','FontUnits','points','FontWeight','normal',...
+    'FontSize',12,'FontName','Times')
+set(gca,'ytick',[0:5],'yticklabel',{'R','S4','S3','S2','S1','W'});
+a = get(gca,'YTickLabel');
+set(gca,'YTickLabel',a,'FontUnits','points',...
+    'FontWeight','normal','FontSize',10,'FontName','Times');
 figure()
 confusionchart(P5stages,stagesfit_ICA)
 
 % Only filters
 stagesfit_noICA=trainedModel_noICA.predictFcn(P5features_noICA); %prediction of stages
+save('./data/training_models/stagesfit_noICA.mat', 'stagesfit_noICA', '-v7.3')
+
 n=0;
 for i=1:length(P5stages)
     if P5stages(i)==stagesfit_noICA(i)
@@ -725,19 +731,27 @@ display("The algorithm with only filters has an accuracy of " + acc_noICA +"%")
 figure()
 plot(stagesfit_noICA);hold on
 plot(P5stages); hold off
-title("Hypnogram real vs ML")
-legend({'real','ML'},'Location','southeast')
+legend({'real','ML'},'Location','southeast',...
+    'interpreter','latex');
 ylim([0 5])
 xlim([0 length(P5stages)])
-xlabel("Epoch Number")
-ylabel("Sleep Stages")
-set(gca,'ytick',[0:5],'yticklabel',{'REM','N4','N3','N2','N1','Wake'});
-
+xlabel("Epoch Number",...
+    'interpreter','latex','FontUnits','points','FontWeight','normal',...
+    'FontSize',12,'FontName','Times')
+ylabel("Sleep Stages",...
+    'interpreter','latex','FontUnits','points','FontWeight','normal',...
+    'FontSize',12,'FontName','Times')
+set(gca,'ytick',[0:5],'yticklabel',{'R','S4','S3','S2','S1','W'});
+a = get(gca,'YTickLabel');
+set(gca,'YTickLabel',a,'FontUnits','points',...
+    'FontWeight','normal','FontSize',10,'FontName','Times');
 figure()
 confusionchart(P5stages,stagesfit_noICA)
 
 % Raw
 stagesfit_raw=trainedModel_raw.predictFcn(P5features_raw); %prediction of stages
+save('./data/training_models/stagesfit_raw.mat', 'stagesfit_raw', '-v7.3')
+
 n=0;
 for i=1:length(P5stages)
     if P5stages(i)==stagesfit_raw(i)
@@ -752,15 +766,27 @@ display("The algorithm with raw data has an accuracy of " + acc_raw +"%")
 
 figure()
 plot(stagesfit_raw);hold on
-plot(P5stages); hold off
-title("Hypnogram real vs ML")
-legend({'real','ML'},'Location','southeast')
-ylim([0 5])
-xlim([0 length(P5stages)])
-xlabel("Epoch Number")
-ylabel("Sleep Stages")
-set(gca,'ytick',[0:5],'yticklabel',{'REM','N4','N3','N2','N1','Wake'});
+plot(P5stages);
 
+
+legend({'real','ML'},'Location','southeast',...
+    'interpreter','latex');
+ylim([0 5])
+xlim([0 500])
+
+set(gca,'ytick',(0:5),'yticklabel',{'R','S4','S3','S2','S1','W'});
+
+a = get(gca,'YTickLabel');
+set(gca,'YTickLabel',a,'FontUnits','points',...
+    'FontWeight','normal','FontSize',10,'FontName','Times');
+
+xlabel("Epoch Number",...
+    'interpreter','latex','FontUnits','points','FontWeight','normal',...
+    'FontSize',12,'FontName','Times')
+ylabel("Sleep Stages",...
+    'interpreter','latex','FontUnits','points','FontWeight','normal',...
+    'FontSize',12,'FontName','Times')
+%%
 figure()
 confusionchart(P5stages,stagesfit_raw)
 

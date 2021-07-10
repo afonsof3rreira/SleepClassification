@@ -9,9 +9,11 @@ This is a project for the classification of sleep stages from EEG recordings. Th
  - **[Ana Matoso]**
  - **[Inês Arana]**
 
+In order to run the project you just have to run the code in the file: main.m.
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen.)
 
    [Afonso Ferreira]: <https://github.com/afonsof3rreira>
    [Ana Matoso]: <https://github.com/afonsof3rreira>
    [Inês Arana]: <https://github.com/afonsof3rreira>   
+
