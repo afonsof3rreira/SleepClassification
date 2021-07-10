@@ -757,18 +757,32 @@ acc_raw = n/length(P5stages)*100;
 clear i n
 
 display("The algorithm with raw data has an accuracy of " + acc_raw +"%")
-
+%%
 figure()
 plot(stagesfit_raw);hold on
-plot(P5stages); hold off
-title("Hypnogram real vs ML")
-legend({'real','ML'},'Location','southeast')
+plot(P5stages);
+sgtitle('Hypnogram real vs ML',...
+    'interpreter','latex','FontUnits','points','FontWeight','demi',...
+    'FontSize',18,'FontName','Times');
+
+legend({'real','ML'},'Location','southeast',...
+    'interpreter','latex');
 ylim([0 5])
 xlim([0 500])
-xlabel("Epoch Number")
-ylabel("Sleep Stages")
-set(gca,'ytick',[0:5],'yticklabel',{'R','S4','S3','S2','S1','W'});
 
+set(gca,'ytick',(0:5),'yticklabel',{'R','S4','S3','S2','S1','W'});
+
+a = get(gca,'YTickLabel');
+set(gca,'YTickLabel',a,'FontUnits','points',...
+    'FontWeight','normal','FontSize',10,'FontName','Times');
+
+xlabel("Epoch Number",...
+    'interpreter','latex','FontUnits','points','FontWeight','normal',...
+    'FontSize',12,'FontName','Times')
+ylabel("Sleep Stages",...
+    'interpreter','latex','FontUnits','points','FontWeight','normal',...
+    'FontSize',12,'FontName','Times')
+%%
 figure()
 confusionchart(P5stages,stagesfit_raw)
 
