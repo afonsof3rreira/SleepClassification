@@ -622,23 +622,12 @@ save('./data/training_models/trainedModelnoICA.mat', 'trainedModelnoICA', '-v7.3
 save('./data/training_models/trainedModelraw.mat', 'trainedModelraw', '-v7.3');
 save('./data/training_models/trainedModel_reduced_ICAfilt.mat', 'trainedModel_reduced_ICAfilt', '-v7.3');
 
-%%
-load('./data/training_models/trainedModelICA.mat', 'trainedModelICA');
-load('./data/training_models/trainedModelICAfilt.mat', 'trainedModelICAfilt');
-load('./data/training_models/trainedModelnoICA.mat', 'trainedModelnoICA');
-load('./data/training_models/trainedModelraw.mat', 'trainedModelraw');
-load('./data/training_models/trainedModel_reduced_ICAfilt.mat', 'trainedModel_reduced_ICAfilt');
-
-save('./data/training_models/trainedModel_ICA.mat', 'trainedModel_ICA', '-v7.3');
-save('./data/training_models/trainedModel_ICAfilt.mat', 'trainedModel_ICAfilt', '-v7.3');
-save('./data/training_models/trainedModel_noICA.mat', 'trainedModel_noICA', '-v7.3');
-save('./data/training_models/trainedModel_raw.mat', 'trainedModel_raw', '-v7.3');
-
 %% Load trained models
 load('./data/training_models/trainedModel_ICA.mat', 'trainedModel_ICA');
 load('./data/training_models/trainedModel_ICAfilt.mat', 'trainedModel_ICAfilt');
 load('./data/training_models/trainedModel_noICA.mat', 'trainedModel_noICA');
 load('./data/training_models/trainedModel_raw.mat', 'trainedModel_raw');
+load('./data/training_models/trainedModel_reduced_ICAfilt.mat', 'trainedModel_reduced_ICAfilt');
 
 %% 29 Test on last patient
 [P5features,P5stages]=dofeaturematrix(segmentedsignals(5,:),sleepstages(5),samplingfrequencies);
